@@ -16,7 +16,9 @@ The Cheap Java project is a data caching system with ~137 Java files organized i
   ├── tsconfig.base.json (shared TypeScript config)
   ├── packages/
   │   ├── cheap-core/
-  │   ├── cheap-db/
+  │   ├── cheap-db-mariadb/
+  │   ├── cheap-db-postgres/
+  │   ├── cheap-db-sqlite/
   │   └── cheap-json/
   ```
 - **Build tooling:** Use TypeScript compiler with project references for multi-module builds
@@ -30,7 +32,6 @@ The Cheap Java project is a data caching system with ~137 Java files organized i
 - **Lombok** → Native TypeScript features (getters/setters not needed)
 - **JetBrains Annotations** → TypeScript's built-in null-safety
 - **JUnit Jupiter** → Jest/Vitest
-- **Commons Math3** → Math.js or native JavaScript
 - **Jackson** → Native JSON support or Zod for validation
 - **SQLite/PostgreSQL JDBC** → better-sqlite3, node-postgres (pg)
 - **Flyway** → node-pg-migrate or db-migrate
@@ -199,7 +200,9 @@ The Cheap Java project is a data caching system with ~137 Java files organized i
 **Module Priority:**
 1. **cheap-core** (highest) - Foundation for everything else
 2. **cheap-json** - Needed for testing/debugging
-3. **cheap-db** - Can follow after core is stable
+3. **cheap-db-sqlite** - Can follow after core is stable
+4. **cheap-db-postgres** - Can follow after core is stable
+5. **cheap-db-maraidb** - Can follow after core is stable
 
 **Risk Areas:**
 - Reflection-based implementations (most complex)

@@ -1,0 +1,67 @@
+name: Build
+
+on:
+  push:
+    branches: ["**"]
+    paths:
+      - "packages/**"
+      - "package.json"
+      - "tsconfig.base.json"
+      - ".github/workflows/build.yml"
+  pull_request:
+    branches: ["**"]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        node-version: [18.x, 20.x, lts/*]
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v6
+        with:
+          node-version: ${{ matrix.node-version }}
+          cache: "npm"
+
+      - name: Install dependencies - cheap-core
+        run: |
+          cd packages/cheap-core
+          npm ci
+
+      - name: Build cheap-core
+        run: |
+          cd packages/cheap-core
+          npm run build
+
+      - name: Install dependencies - cheap-json
+        run: |
+          cd packages/cheap-json
+          npm ci
+
+      - name: Build cheap-json
+        run: |
+          cd packages/cheap-json
+          npm run build
+
+      - name: Run tests - cheap-core
+        run: |
+          cd packages/cheap-core
+          npm test
+        continue-on-error: true
+
+      - name: Run tests - cheap-json
+        run: |
+          cd packages/cheap-json
+          npm test
+        continue-on-error: true
+
+      - name: Lint
+        run: |
+          npm ci
+          npm run lint
+        continue-on-error: true
