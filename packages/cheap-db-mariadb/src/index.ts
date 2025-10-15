@@ -2,39 +2,48 @@
  * @cheapjs/db-mariadb - MariaDB database implementation for CHEAP model
  */
 
-import type { Catalog, CatalogDef, Entity, Hierarchy } from '@cheapjs/core';
-import { BaseCatalog, CatalogSpecies } from '@cheapjs/core';
+import { CatalogImpl } from '@cheapjs/core';
 
-export class MariaDbCatalog extends BaseCatalog implements Catalog {
-  constructor(def: CatalogDef) {
-    super(def, CatalogSpecies.DATABASE);
+/**
+ * MariaDB-backed catalog implementation.
+ * This is a stub implementation that extends CatalogImpl.
+ *
+ * Database catalogs use the SOURCE species for read-only access
+ * or SINK species for read-write access to external data sources.
+ */
+export class MariaDbCatalog extends CatalogImpl {
+  constructor() {
+    // Create a SINK catalog (read-write external data source)
+    super();
   }
 
-  async getEntity(_id: string): Promise<Entity | null> {
+  /**
+   * Connect to a MariaDB database with the specified connection string.
+   *
+   * @param connectionString MariaDB connection string
+   */
+  async connect(_connectionString: string): Promise<void> {
     throw new Error('Not implemented');
   }
 
-  async putEntity(_entity: Entity): Promise<void> {
-    throw new Error('Not implemented');
-  }
-
-  async deleteEntity(_id: string): Promise<void> {
-    throw new Error('Not implemented');
-  }
-
-  async getHierarchy(_name: string): Promise<Hierarchy | null> {
-    throw new Error('Not implemented');
-  }
-
-  async putHierarchy(_hierarchy: Hierarchy): Promise<void> {
-    throw new Error('Not implemented');
-  }
-
-  async deleteHierarchy(_name: string): Promise<void> {
-    throw new Error('Not implemented');
-  }
-
+  /**
+   * Close the database connection.
+   */
   async close(): Promise<void> {
+    throw new Error('Not implemented');
+  }
+
+  /**
+   * Load entities from the database into this catalog.
+   */
+  async load(): Promise<void> {
+    throw new Error('Not implemented');
+  }
+
+  /**
+   * Save entities from this catalog to the database.
+   */
+  async save(): Promise<void> {
     throw new Error('Not implemented');
   }
 }
