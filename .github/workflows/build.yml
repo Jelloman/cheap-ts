@@ -8,6 +8,7 @@ on:
       - "package.json"
       - "tsconfig.base.json"
       - ".github/workflows/build.yml"
+      - "yarn.lock"
   pull_request:
     branches: ["**"]
 
@@ -31,13 +32,9 @@ jobs:
           node-version: ${{ matrix.node-version }}
           cache: "yarn"
 
-      - name: Clear yarn cache to try to fix build issue
-        run: yarn cache clean --all
-
       - name: Install dependencies
         run: |
-          yarn install
-      #          yarn install --immutable
+          yarn install --immutable
       - name: Build all
         run: |
           yarn run build
