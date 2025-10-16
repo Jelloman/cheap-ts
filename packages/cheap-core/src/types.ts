@@ -12,6 +12,9 @@
  * type safety and efficient serialization.
  */
 export class PropertyType {
+  // Initialize LOOKUP before static instances to avoid undefined errors
+  private static readonly LOOKUP = new Map<string, PropertyType>();
+
   /**
    * 64-bit signed integer values. Uses JavaScript number for representation
    * to ensure full range support and consistency across platforms.
@@ -90,8 +93,6 @@ export class PropertyType {
    * a Uint8Array.
    */
   static readonly BLOB = new PropertyType('BLB', 'BLOB', Uint8Array);
-
-  private static readonly LOOKUP = new Map<string, PropertyType>();
 
   private constructor(
     private readonly _typeCode: string,

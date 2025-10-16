@@ -7,6 +7,8 @@ import { PropertyType } from '../types.js';
 import { CheapHasher } from '../util/CheapHasher.js';
 
 export class PropertyDefImpl implements PropertyDef {
+  private _cachedHash: bigint = 0n;
+
   constructor(
     private readonly _name: string,
     private readonly _type: PropertyType,
@@ -56,6 +58,9 @@ export class PropertyDefImpl implements PropertyDef {
   }
 
   fullyEquals(other: PropertyDef): boolean {
+    if (other == null) {
+      return false;
+    }
     return (
       this.hasDefaultValue() === other.hasDefaultValue() &&
       this.isReadable() === other.isReadable() &&
@@ -69,47 +74,50 @@ export class PropertyDefImpl implements PropertyDef {
   }
 
   hash(): bigint {
-    const hasher = new CheapHasher();
+    if (this._cachedHash === 0n) {
+      const hasher = new CheapHasher();
 
-    // Hash all property definition fields in order
-    hasher.updateString(this._name);
-    hasher.updateString(this._type.toString());
-    hasher.updateBoolean(this._hasDefaultValue);
+      // Hash all property definition fields in order
+      hasher.updateString(this._name);
+      hasher.updateString(this._type.toString());
+      hasher.updateBoolean(this._hasDefaultValue);
 
-    // Hash default value if it exists
-    if (this._hasDefaultValue && this._defaultValue !== null) {
-      // Hash based on the type of the default value
-      const defaultVal = this._defaultValue;
-      if (typeof defaultVal === 'string') {
-        hasher.updateString(defaultVal);
-      } else if (typeof defaultVal === 'number') {
-        hasher.updateNumber(defaultVal);
-      } else if (typeof defaultVal === 'boolean') {
-        hasher.updateBoolean(defaultVal);
-      } else if (typeof defaultVal === 'bigint') {
-        hasher.updateBigInt(defaultVal);
-      } else if (defaultVal instanceof Date) {
-        hasher.updateDate(defaultVal);
-      } else if (defaultVal instanceof URL) {
-        hasher.updateURL(defaultVal);
-      } else if (defaultVal instanceof Uint8Array) {
-        hasher.updateBytes(defaultVal);
-      } else {
-        // For other types, hash their string representation
-        hasher.updateString(String(defaultVal));
+      // Hash default value if it exists
+      if (this._hasDefaultValue && this._defaultValue !== null) {
+        // Hash based on the type of the default value
+        const defaultVal = this._defaultValue;
+        if (typeof defaultVal === 'string') {
+          hasher.updateString(defaultVal);
+        } else if (typeof defaultVal === 'number') {
+          hasher.updateNumber(defaultVal);
+        } else if (typeof defaultVal === 'boolean') {
+          hasher.updateBoolean(defaultVal);
+        } else if (typeof defaultVal === 'bigint') {
+          hasher.updateBigInt(defaultVal);
+        } else if (defaultVal instanceof Date) {
+          hasher.updateDate(defaultVal);
+        } else if (defaultVal instanceof URL) {
+          hasher.updateURL(defaultVal);
+        } else if (defaultVal instanceof Uint8Array) {
+          hasher.updateBytes(defaultVal);
+        } else {
+          // For other types, hash their string representation
+          hasher.updateString(String(defaultVal));
+        }
+      } else if (this._hasDefaultValue && this._defaultValue === null) {
+        // Hash null explicitly
+        hasher.updateString(null);
       }
-    } else if (this._hasDefaultValue && this._defaultValue === null) {
-      // Hash null explicitly
-      hasher.updateString(null);
+
+      hasher.updateBoolean(this._isReadable);
+      hasher.updateBoolean(this._isWritable);
+      hasher.updateBoolean(this._isNullable);
+      hasher.updateBoolean(this._isRemovable);
+      hasher.updateBoolean(this._isMultivalued);
+
+      this._cachedHash = hasher.getHash();
     }
-
-    hasher.updateBoolean(this._isReadable);
-    hasher.updateBoolean(this._isWritable);
-    hasher.updateBoolean(this._isNullable);
-    hasher.updateBoolean(this._isRemovable);
-    hasher.updateBoolean(this._isMultivalued);
-
-    return hasher.getHash();
+    return this._cachedHash;
   }
 
   validatePropertyValue(value: unknown, throwExceptions: boolean): boolean {
@@ -153,7 +161,22 @@ export class PropertyDefImpl implements PropertyDef {
         }
       } else {
         // For single-valued properties, validate the value directly
-        if (!(value instanceof expectedJsType)) {
+        // Check primitive types with typeof, objects with instanceof
+        let isValid = false;
+        if (expectedJsType === Number) {
+          isValid = typeof value === 'number';
+        } else if (expectedJsType === String) {
+          isValid = typeof value === 'string';
+        } else if (expectedJsType === Boolean) {
+          isValid = typeof value === 'boolean';
+        } else if (expectedJsType === BigInt) {
+          isValid = typeof value === 'bigint';
+        } else {
+          // For object types (Date, URL, Uint8Array, etc.), use instanceof
+          isValid = value instanceof expectedJsType;
+        }
+
+        if (!isValid) {
           if (throwExceptions) {
             throw new Error(
               `Property '${this.name()}' expects type ${expectedJsType.name} but got ${typeof value}`

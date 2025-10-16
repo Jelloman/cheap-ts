@@ -152,13 +152,29 @@ export abstract class AspectDefBase implements AspectDef {
 export class ImmutableAspectDefImpl extends AspectDefBase {
   constructor(
     name: string,
-    globalId: string,
-    propertyDefs: Map<string, PropertyDef>
+    globalIdOrPropertyDefs?: string | Map<string, PropertyDef>,
+    propertyDefsOrUndefined?: Map<string, PropertyDef>
   ) {
-    // Create an immutable copy of the property definitions map
-    super(name, globalId, new Map(propertyDefs));
+    // Support both 2-parameter and 3-parameter constructors
+    // 2-parameter: (name, propertyDefs) - generate UUID
+    // 3-parameter: (name, globalId, propertyDefs)
+    let actualGlobalId: string;
+    let actualPropertyDefs: Map<string, PropertyDef>;
 
-    if (propertyDefs.size === 0) {
+    if (typeof globalIdOrPropertyDefs === 'string') {
+      // 3-parameter form
+      actualGlobalId = globalIdOrPropertyDefs;
+      actualPropertyDefs = propertyDefsOrUndefined!;
+    } else {
+      // 2-parameter form
+      actualGlobalId = crypto.randomUUID();
+      actualPropertyDefs = globalIdOrPropertyDefs!;
+    }
+
+    // Create an immutable copy of the property definitions map
+    super(name, actualGlobalId, new Map(actualPropertyDefs));
+
+    if (actualPropertyDefs.size === 0) {
       throw new Error('An AspectDef must contain at least one property.');
     }
   }
@@ -170,6 +186,22 @@ export class ImmutableAspectDefImpl extends AspectDefBase {
   canRemoveProperties(): boolean {
     return false;
   }
+
+  /**
+   * Attempting to add a property to an immutable AspectDef throws an error.
+   */
+  add(_prop: PropertyDef): PropertyDef | null {
+    throw new Error(`Properties cannot be added to immutable AspectDef '${this._name}'.`);
+  }
+
+  /**
+   * Attempting to remove a property from an immutable AspectDef throws an error.
+   */
+  remove(_prop: PropertyDef): PropertyDef | null {
+    throw new Error(
+      `Properties cannot be removed from immutable AspectDef '${this._name}'.`
+    );
+  }
 }
 
 /**
@@ -177,8 +209,9 @@ export class ImmutableAspectDefImpl extends AspectDefBase {
  * This implementation allows adding and removing property definitions dynamically.
  */
 export class MutableAspectDefImpl extends AspectDefBase implements MutableAspectDef {
-  constructor(name: string, globalId: string, propertyDefs?: Map<string, PropertyDef>) {
-    super(name, globalId, propertyDefs ?? new Map());
+  constructor(name: string, globalId: string, propertyDefs?: Map<string, PropertyDef> | null) {
+    // Only use default empty Map if undefined (not provided), not if explicitly null
+    super(name, globalId, propertyDefs !== undefined ? (propertyDefs as Map<string, PropertyDef>) : new Map());
   }
 
   canAddProperties(): boolean {

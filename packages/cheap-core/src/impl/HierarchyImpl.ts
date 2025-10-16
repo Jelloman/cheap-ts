@@ -483,17 +483,17 @@ export class EntityTreeLeafNodeImpl implements EntityTreeNode {
   get size(): number {
     return 0;
   }
-  entries(): IterableIterator<[string, EntityTreeNode]> {
-    return [][Symbol.iterator]();
+  entries(): MapIterator<[string, EntityTreeNode]> {
+    return new Map<string, EntityTreeNode>().entries();
   }
-  keys(): IterableIterator<string> {
-    return [][Symbol.iterator]();
+  keys(): MapIterator<string> {
+    return new Map<string, EntityTreeNode>().keys();
   }
-  values(): IterableIterator<EntityTreeNode> {
-    return [][Symbol.iterator]();
+  values(): MapIterator<EntityTreeNode> {
+    return new Map<string, EntityTreeNode>().values();
   }
-  [Symbol.iterator](): IterableIterator<[string, EntityTreeNode]> {
-    return [][Symbol.iterator]();
+  [Symbol.iterator](): MapIterator<[string, EntityTreeNode]> {
+    return new Map<string, EntityTreeNode>().entries();
   }
   [Symbol.toStringTag] = 'EntityTreeLeafNode';
 }

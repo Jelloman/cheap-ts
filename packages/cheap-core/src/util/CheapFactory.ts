@@ -15,13 +15,18 @@
  */
 
 import { PropertyDef } from '../interfaces/Property.js';
-import { AspectDef } from '../interfaces/Aspect.js';
+import { AspectDef, Aspect, AspectBuilder } from '../interfaces/Aspect.js';
 import { Entity } from '../interfaces/Entity.js';
 import { PropertyType, LocalEntityType } from '../types.js';
 import { PropertyDefImpl, PropertyImpl } from '../impl/PropertyImpl.js';
-import { MutableAspectDefImpl } from '../impl/AspectDefImpl.js';
+import { MutableAspectDefImpl, ImmutableAspectDefImpl } from '../impl/AspectDefImpl.js';
 import { EntityImpl } from '../impl/EntityImpl.js';
 import { PropertyValueAdapter } from './PropertyValueAdapter.js';
+import {
+  AspectObjectMapImpl,
+  AspectPropertyMapImpl,
+} from '../impl/AspectImpl.js';
+import { AspectObjectMapBuilder } from '../impl/AspectBuilderImpl.js';
 
 /**
  * Factory class providing instance-based factory methods for creating instances of all
@@ -40,26 +45,37 @@ import { PropertyValueAdapter } from './PropertyValueAdapter.js';
 export class CheapFactory {
   /** The default LocalEntity type to create when not explicitly specified. */
   private readonly defaultLocalEntityType: LocalEntityType;
+  /** The default AspectBuilder class to use when creating builders. */
+  private readonly aspectBuilderClass: new () => AspectBuilder;
   private readonly aspectDefs: Map<string, AspectDef> = new Map();
   private readonly entities: Map<string, Entity> = new Map();
   private readonly propertyAdapter: PropertyValueAdapter;
   private timeZone: string;
 
   /**
-   * Creates a new CheapFactory with the defaults of LocalEntityType.ONE_CATALOG.
+   * Creates a new CheapFactory with the defaults of LocalEntityType.SINGLE_CATALOG
+   * and AspectObjectMapBuilder.
    */
   constructor();
 
   /**
-   * Creates a new CheapFactory with the specified default LocalEntity type.
-   * If null, defaults to LocalEntityType.ONE_CATALOG.
+   * Creates a new CheapFactory with the specified default LocalEntity type and AspectBuilder class.
+   * If null, these default to LocalEntityType.SINGLE_CATALOG and AspectObjectMapBuilder.
    *
    * @param defaultLocalEntityType the default type of LocalEntity to create
+   * @param aspectBuilderClass the default AspectBuilder class to use
    */
-  constructor(defaultLocalEntityType?: LocalEntityType | null);
+  constructor(
+    defaultLocalEntityType?: LocalEntityType | null,
+    aspectBuilderClass?: (new () => AspectBuilder) | null
+  );
 
-  constructor(defaultLocalEntityType?: LocalEntityType | null) {
+  constructor(
+    defaultLocalEntityType?: LocalEntityType | null,
+    aspectBuilderClass?: (new () => AspectBuilder) | null
+  ) {
     this.defaultLocalEntityType = defaultLocalEntityType ?? LocalEntityType.SINGLE_CATALOG;
+    this.aspectBuilderClass = aspectBuilderClass ?? AspectObjectMapBuilder;
     this.timeZone = Intl.DateTimeFormat().resolvedOptions().timeZone;
     this.propertyAdapter = new PropertyValueAdapter(this.timeZone);
   }
@@ -80,6 +96,24 @@ export class CheapFactory {
    */
   getDefaultLocalEntityType(): LocalEntityType {
     return this.defaultLocalEntityType;
+  }
+
+  /**
+   * Returns the default AspectBuilder class configured for this factory.
+   *
+   * @returns the default AspectBuilder class
+   */
+  getAspectBuilderClass(): new () => AspectBuilder {
+    return this.aspectBuilderClass;
+  }
+
+  /**
+   * Creates a new AspectBuilder instance of the configured type.
+   *
+   * @returns a new AspectBuilder instance
+   */
+  createAspectBuilder(): AspectBuilder {
+    return new this.aspectBuilderClass();
   }
 
   /**
@@ -191,21 +225,106 @@ export class CheapFactory {
    * Creates a new mutable aspect definition.
    *
    * @param name the name of this aspect definition
-   * @returns a new AspectDef instance
+   * @returns a new mutable AspectDef instance
    */
-  createAspectDef(name: string): AspectDef;
+  createMutableAspectDef(name: string): AspectDef;
 
   /**
    * Creates a new mutable aspect definition with property definitions.
    *
    * @param name the name of this aspect definition
    * @param propertyDefs the map of property names to property definitions
-   * @returns a new AspectDef instance
+   * @returns a new mutable AspectDef instance
+   */
+  createMutableAspectDef(name: string, propertyDefs: Map<string, PropertyDef>): AspectDef;
+
+  /**
+   * Creates a new mutable aspect definition with explicit UUID and property definitions.
+   *
+   * @param name the name of this aspect definition
+   * @param aspectDefId the global ID of this aspect definition
+   * @param propertyDefs the map of property names to property definitions
+   * @returns a new mutable AspectDef instance
+   */
+  createMutableAspectDef(
+    name: string,
+    aspectDefId: string,
+    propertyDefs: Map<string, PropertyDef>
+  ): AspectDef;
+
+  createMutableAspectDef(
+    name: string,
+    aspectDefIdOrPropertyDefs?: string | Map<string, PropertyDef>,
+    propertyDefs?: Map<string, PropertyDef>
+  ): AspectDef {
+    if (aspectDefIdOrPropertyDefs === undefined) {
+      // Single parameter: name only
+      return new MutableAspectDefImpl(name, crypto.randomUUID(), undefined);
+    } else if (typeof aspectDefIdOrPropertyDefs === 'string') {
+      // Three parameters: name, aspectDefId, propertyDefs
+      return new MutableAspectDefImpl(name, aspectDefIdOrPropertyDefs, propertyDefs);
+    } else {
+      // Two parameters: name, propertyDefs
+      return new MutableAspectDefImpl(name, crypto.randomUUID(), aspectDefIdOrPropertyDefs);
+    }
+  }
+
+  /**
+   * Creates a new immutable aspect definition.
+   *
+   * @param name the name of this aspect definition
+   * @param propertyDefs the map of property names to property definitions
+   * @returns a new immutable AspectDef instance
+   */
+  createImmutableAspectDef(name: string, propertyDefs: Map<string, PropertyDef>): AspectDef;
+
+  /**
+   * Creates a new immutable aspect definition with explicit UUID.
+   *
+   * @param name the name of this aspect definition
+   * @param aspectDefId the global ID of this aspect definition
+   * @param propertyDefs the map of property names to property definitions
+   * @returns a new immutable AspectDef instance
+   */
+  createImmutableAspectDef(
+    name: string,
+    aspectDefId: string,
+    propertyDefs: Map<string, PropertyDef>
+  ): AspectDef;
+
+  createImmutableAspectDef(
+    name: string,
+    aspectDefIdOrPropertyDefs: string | Map<string, PropertyDef>,
+    propertyDefs?: Map<string, PropertyDef>
+  ): AspectDef {
+    if (typeof aspectDefIdOrPropertyDefs === 'string') {
+      // Three parameters: name, aspectDefId, propertyDefs
+      return new ImmutableAspectDefImpl(name, aspectDefIdOrPropertyDefs, propertyDefs!);
+    } else {
+      // Two parameters: name, propertyDefs
+      return new ImmutableAspectDefImpl(name, crypto.randomUUID(), aspectDefIdOrPropertyDefs);
+    }
+  }
+
+  /**
+   * Convenience alias for createMutableAspectDef.
+   *
+   * @param name the name of this aspect definition
+   * @returns a new mutable AspectDef instance
+   */
+  createAspectDef(name: string): AspectDef;
+
+  /**
+   * Convenience alias for createMutableAspectDef.
+   *
+   * @param name the name of this aspect definition
+   * @param propertyDefs the map of property names to property definitions
+   * @returns a new mutable AspectDef instance
    */
   createAspectDef(name: string, propertyDefs: Map<string, PropertyDef>): AspectDef;
 
   createAspectDef(name: string, propertyDefs?: Map<string, PropertyDef>): AspectDef {
-    return new MutableAspectDefImpl(name, crypto.randomUUID(), propertyDefs);
+    return this.createMutableAspectDef(name, propertyDefs as any);
   }
 
   // ===== Property Factory Methods =====
@@ -315,5 +434,29 @@ export class CheapFactory {
   createProperty(def: PropertyDef, value: unknown) {
     const coercedValue = this.propertyAdapter.coerce(def, value);
     return new PropertyImpl(def, coercedValue);
+  }
+
+  // ===== Aspect Factory Methods =====
+
+  /**
+   * Creates a new aspect with object-based property storage.
+   *
+   * @param entity the entity this aspect is attached to
+   * @param def the aspect definition describing this aspect's structure
+   * @returns a new Aspect instance
+   */
+  createObjectMapAspect(entity: Entity | null, def: AspectDef): Aspect {
+    return new AspectObjectMapImpl(entity, def);
+  }
+
+  /**
+   * Creates a new aspect with Property-based storage.
+   *
+   * @param entity the entity this aspect is attached to
+   * @param def the aspect definition describing this aspect's structure
+   * @returns a new Aspect instance
+   */
+  createPropertyMapAspect(entity: Entity | null, def: AspectDef): Aspect {
+    return new AspectPropertyMapImpl(entity, def);
   }
 }
