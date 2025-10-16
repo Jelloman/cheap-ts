@@ -2,28 +2,33 @@
   "name": "cheapjs-workspace",
   "version": "0.1.0",
   "private": true,
+  "type": "module",
   "description": "CHEAP (Catalog, Hierarchy, Entity, Aspect, Property) - A git-like system for structured data",
   "license": "Apache-2.0",
   "workspaces": [
     "packages/*"
   ],
   "scripts": {
-    "build": "npm run build --workspaces",
-    "test": "npm run test --workspaces",
+    "build": "yarn workspaces foreach -A --exclude . run build",
+    "test": "yarn workspaces foreach -A --exclude . run test",
     "lint": "eslint packages/*/src/**/*.ts",
     "format": "prettier --write \"packages/*/src/**/*.ts\"",
-    "clean": "npm run clean --workspaces"
+    "clean": "yarn workspaces foreach -A --exclude . run clean"
   },
   "devDependencies": {
     "@types/node": "^24.0.0",
     "@typescript-eslint/eslint-plugin": "^8.0.0",
     "@typescript-eslint/parser": "^8.0.0",
     "eslint": "^9.0.0",
+    "globals": "^15.0.0",
     "jest": "^30.0.0",
+    "jest-util": "^30.0.0",
+    "jiti": "^2.0.0",
     "prettier": "^3.0.0",
     "ts-jest": "^29.4.5",
     "ts-node": "^10.9.2",
-    "typescript": "^5.9.0"
+    "typescript": "^5.9.0",
+    "typescript-eslint": "^8.0.0"
   },
   "engines": {
     "node": ">=24.0.0"

@@ -21,9 +21,12 @@
     "pg": "^8.16.0"
   },
   "devDependencies": {
+    "@jest/globals": "^30.0.0",
+    "@types/jest": "^30.0.0",
     "@types/node": "^24.0.0",
     "@types/pg": "^8.15.0",
     "jest": "^30.0.0",
+    "ts-jest": "^29.4.5",
     "typescript": "^5.9.0"
   }
 }

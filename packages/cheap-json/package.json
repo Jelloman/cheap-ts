@@ -14,15 +14,17 @@
   "scripts": {
     "build": "tsc -b",
     "clean": "rm -rf dist tsconfig.tsbuildinfo",
-    "test": "vitest"
+    "test": "jest"
   },
   "dependencies": {
     "@cheapjs/core": "file:../cheap-core"
   },
   "devDependencies": {
+    "@jest/globals": "^30.0.0",
+    "@types/jest": "^30.0.0",
     "@types/node": "^24.0.0",
-    "@types/pg": "^8.15.0",
     "jest": "^30.0.0",
+    "ts-jest": "^29.4.5",
     "typescript": "^5.9.0"
   }
 }

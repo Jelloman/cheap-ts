@@ -1,0 +1,16 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(yarn run test)",
+      "Bash(yarn --version)",
+      "Bash(yarn info:*)",
+      "Bash(yarn why:*)",
+      "Bash(yarn install)",
+      "Bash(yarn test)",
+      "Bash(yarn workspaces foreach:*)",
+      "Bash(yarn run lint:*)"
+    ],
+    "deny": [],
+    "ask": []
+  }
+}

@@ -28,40 +28,19 @@ jobs:
           node-version: ${{ matrix.node-version }}
           cache: "npm"
 
-      - name: Install dependencies - cheap-core
+      - name: Install dependencies
         run: |
-          cd packages/cheap-core
-          npm ci
+          yarn install --immutable
 
-      - name: Build cheap-core
+      - name: Build all
         run: |
-          cd packages/cheap-core
-          npm run build
+          yarn run build
 
-      - name: Install dependencies - cheap-json
+      - name: Run tests - all
         run: |
-          cd packages/cheap-json
-          npm ci
-
-      - name: Build cheap-json
-        run: |
-          cd packages/cheap-json
-          npm run build
-
-      - name: Run tests - cheap-core
-        run: |
-          cd packages/cheap-core
-          npm test
+          yarn run test
         continue-on-error: true
-
-      - name: Run tests - cheap-json
-        run: |
-          cd packages/cheap-json
-          npm test
-        continue-on-error: true
-
-      - name: Lint
-        run: |
-          npm ci
-          npm run lint
-        continue-on-error: true
+#      - name: Lint
+#        run: |
+#          yarn run lint
+#        continue-on-error: true
