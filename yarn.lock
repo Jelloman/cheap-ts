@@ -383,37 +383,29 @@ __metadata:
 
 "@cheapjs/core@file:../cheap-core::locator=%40cheapjs%2Fdb-mariadb%40workspace%3Apackages%2Fcheap-db-mariadb":
   version: 0.1.0
-  resolution: "@cheapjs/core@file:../cheap-core#../cheap-core::hash=6a0c35&locator=%40cheapjs%2Fdb-mariadb%40workspace%3Apackages%2Fcheap-db-mariadb"
-  dependencies:
-    reflect-metadata: "npm:^0.2.0"
-  checksum: 10c0/6bbb0ccfc85300b682156f22bb4f4cd494971cfe88af693a7c69307f303136663f9331e9c163775054638c7636a1d41eba29fda1ec41c875f4ea08bceb1feb86
+  resolution: "@cheapjs/core@file:../cheap-core#../cheap-core::hash=b931b9&locator=%40cheapjs%2Fdb-mariadb%40workspace%3Apackages%2Fcheap-db-mariadb"
+  checksum: 10c0/a86fe3786b1e343d90defd31ecfd18d48b4368d23561463e0460b801876070ddf529697c5ce7e060ebc60200df44e7d57ac458f86e347fa25e8713088eb6b8be
   languageName: node
   linkType: hard
 
 "@cheapjs/core@file:../cheap-core::locator=%40cheapjs%2Fdb-postgres%40workspace%3Apackages%2Fcheap-db-postgres":
   version: 0.1.0
-  resolution: "@cheapjs/core@file:../cheap-core#../cheap-core::hash=6a0c35&locator=%40cheapjs%2Fdb-postgres%40workspace%3Apackages%2Fcheap-db-postgres"
-  dependencies:
-    reflect-metadata: "npm:^0.2.0"
-  checksum: 10c0/6bbb0ccfc85300b682156f22bb4f4cd494971cfe88af693a7c69307f303136663f9331e9c163775054638c7636a1d41eba29fda1ec41c875f4ea08bceb1feb86
+  resolution: "@cheapjs/core@file:../cheap-core#../cheap-core::hash=b931b9&locator=%40cheapjs%2Fdb-postgres%40workspace%3Apackages%2Fcheap-db-postgres"
+  checksum: 10c0/a86fe3786b1e343d90defd31ecfd18d48b4368d23561463e0460b801876070ddf529697c5ce7e060ebc60200df44e7d57ac458f86e347fa25e8713088eb6b8be
   languageName: node
   linkType: hard
 
 "@cheapjs/core@file:../cheap-core::locator=%40cheapjs%2Fdb-sqlite%40workspace%3Apackages%2Fcheap-db-sqlite":
   version: 0.1.0
-  resolution: "@cheapjs/core@file:../cheap-core#../cheap-core::hash=6a0c35&locator=%40cheapjs%2Fdb-sqlite%40workspace%3Apackages%2Fcheap-db-sqlite"
-  dependencies:
-    reflect-metadata: "npm:^0.2.0"
-  checksum: 10c0/6bbb0ccfc85300b682156f22bb4f4cd494971cfe88af693a7c69307f303136663f9331e9c163775054638c7636a1d41eba29fda1ec41c875f4ea08bceb1feb86
+  resolution: "@cheapjs/core@file:../cheap-core#../cheap-core::hash=b931b9&locator=%40cheapjs%2Fdb-sqlite%40workspace%3Apackages%2Fcheap-db-sqlite"
+  checksum: 10c0/a86fe3786b1e343d90defd31ecfd18d48b4368d23561463e0460b801876070ddf529697c5ce7e060ebc60200df44e7d57ac458f86e347fa25e8713088eb6b8be
   languageName: node
   linkType: hard
 
 "@cheapjs/core@file:../cheap-core::locator=%40cheapjs%2Fjson%40workspace%3Apackages%2Fcheap-json":
   version: 0.1.0
-  resolution: "@cheapjs/core@file:../cheap-core#../cheap-core::hash=6a0c35&locator=%40cheapjs%2Fjson%40workspace%3Apackages%2Fcheap-json"
-  dependencies:
-    reflect-metadata: "npm:^0.2.0"
-  checksum: 10c0/6bbb0ccfc85300b682156f22bb4f4cd494971cfe88af693a7c69307f303136663f9331e9c163775054638c7636a1d41eba29fda1ec41c875f4ea08bceb1feb86
+  resolution: "@cheapjs/core@file:../cheap-core#../cheap-core::hash=b931b9&locator=%40cheapjs%2Fjson%40workspace%3Apackages%2Fcheap-json"
+  checksum: 10c0/a86fe3786b1e343d90defd31ecfd18d48b4368d23561463e0460b801876070ddf529697c5ce7e060ebc60200df44e7d57ac458f86e347fa25e8713088eb6b8be
   languageName: node
   linkType: hard
 
@@ -425,7 +417,6 @@ __metadata:
     "@types/jest": "npm:^30.0.0"
     "@types/node": "npm:^24.0.0"
     jest: "npm:^30.0.0"
-    reflect-metadata: "npm:^0.2.0"
     ts-jest: "npm:^29.4.5"
     typescript: "npm:^5.9.0"
   languageName: unknown
@@ -4370,13 +4361,6 @@ __metadata:
     string_decoder: "npm:^1.1.1"
     util-deprecate: "npm:^1.0.1"
   checksum: 10c0/e37be5c79c376fdd088a45fa31ea2e423e5d48854be7a22a58869b4e84d25047b193f6acb54f1012331e1bcd667ffb569c01b99d36b0bd59658fb33f513511b7
-  languageName: node
-  linkType: hard
-
-"reflect-metadata@npm:^0.2.0":
-  version: 0.2.2
-  resolution: "reflect-metadata@npm:0.2.2"
-  checksum: 10c0/1cd93a15ea291e420204955544637c264c216e7aac527470e393d54b4bb075f10a17e60d8168ec96600c7e0b9fcc0cb0bb6e91c3fbf5b0d8c9056f04e6ac1ec2
   languageName: node
   linkType: hard
 

@@ -16,9 +16,6 @@
     "clean": "rm -rf dist tsconfig.tsbuildinfo",
     "test": "jest"
   },
-  "dependencies": {
-    "reflect-metadata": "^0.2.0"
-  },
   "devDependencies": {
     "@jest/globals": "^30.0.0",
     "@types/jest": "^30.0.0",
