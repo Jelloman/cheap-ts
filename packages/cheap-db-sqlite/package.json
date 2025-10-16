@@ -1,5 +1,5 @@
 {
-  "name": "@cheapjs/db-sqlite",
+  "name": "@cheap-ts/db-sqlite",
   "version": "0.1.0",
   "description": "SQLite database implementation for CHEAP model",
   "type": "module",
@@ -17,7 +17,7 @@
     "test": "jest"
   },
   "dependencies": {
-    "@cheapjs/core": "file:../cheap-core",
+    "@cheap-ts/core": "^0.1.0",
     "better-sqlite3": "^12.0.0"
   },
   "devDependencies": {

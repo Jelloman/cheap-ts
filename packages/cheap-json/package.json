@@ -1,5 +1,5 @@
 {
-  "name": "@cheapjs/json",
+  "name": "@cheap-ts/json",
   "version": "0.1.0",
   "description": "JSON serialization/deserialization for CHEAP model",
   "type": "module",
@@ -17,7 +17,7 @@
     "test": "jest"
   },
   "dependencies": {
-    "@cheapjs/core": "file:../cheap-core"
+    "@cheap-ts/core": "^0.1.0"
   },
   "devDependencies": {
     "@jest/globals": "^30.0.0",

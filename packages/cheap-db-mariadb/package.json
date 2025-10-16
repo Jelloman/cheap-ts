@@ -1,5 +1,5 @@
 {
-  "name": "@cheapjs/db-mariadb",
+  "name": "@cheap-ts/db-mariadb",
   "version": "0.1.0",
   "description": "MariaDB database implementation for CHEAP model",
   "type": "module",
@@ -17,7 +17,7 @@
     "test": "jest"
   },
   "dependencies": {
-    "@cheapjs/core": "file:../cheap-core",
+    "@cheap-ts/core": "^0.1.0",
     "mariadb": "^3.4.0"
   },
   "devDependencies": {

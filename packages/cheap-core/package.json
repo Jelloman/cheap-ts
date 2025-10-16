@@ -1,5 +1,5 @@
 {
-  "name": "@cheapjs/core",
+  "name": "@cheap-ts/core",
   "version": "0.1.0",
   "description": "Core CHEAP model implementation",
   "type": "module",
