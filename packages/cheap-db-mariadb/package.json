@@ -1,5 +1,5 @@
 {
-  "name": "@cheapjs/db-mariadb",
+  "name": "@cheap-ts/db-mariadb",
   "version": "0.1.0",
   "description": "MariaDB database implementation for CHEAP model",
   "type": "module",
@@ -14,15 +14,18 @@
   "scripts": {
     "build": "tsc -b",
     "clean": "rm -rf dist tsconfig.tsbuildinfo",
-    "test": "vitest"
+    "test": "jest"
   },
   "dependencies": {
-    "@cheapjs/core": "file:../cheap-core",
-    "mariadb": "^3.2.0"
+    "@cheap-ts/core": "^0.1.0",
+    "mariadb": "^3.4.0"
   },
   "devDependencies": {
-    "@types/node": "^20.0.0",
-    "typescript": "^5.3.0",
-    "vitest": "^1.0.0"
+    "@jest/globals": "^30.0.0",
+    "@types/jest": "^30.0.0",
+    "@types/node": "^24.0.0",
+    "jest": "^30.0.0",
+    "ts-jest": "^29.4.5",
+    "typescript": "^5.9.0"
   }
 }

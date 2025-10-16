@@ -1,8 +1,8 @@
 /**
- * @cheapjs/db-postgres - PostgreSQL database implementation for CHEAP model
+ * @cheap-ts/db-postgres - PostgreSQL database implementation for CHEAP model
  */
 
-import { CatalogImpl } from '@cheapjs/core';
+import { CatalogImpl } from '@cheap-ts/core';
 
 /**
  * PostgreSQL-backed catalog implementation.

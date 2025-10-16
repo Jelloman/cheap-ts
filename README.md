@@ -23,11 +23,11 @@ cheap-ts/
 ### ✅ Completed
 - Project structure and build system setup
 - TypeScript configuration with project references
-- **@cheapjs/core** package with stub implementations:
+- **cheap-ts/core** package with stub implementations:
   - Type definitions (PropertyType, HierarchyType, CatalogSpecies, LocalEntityType)
   - Core interfaces (Property, Aspect, Entity, Hierarchy, Catalog)
   - Basic implementation classes
-- **@cheapjs/json** package scaffolded
+- **@cheap-ts/json** package scaffolded
 - Database packages scaffolded (SQLite, PostgreSQL, MariaDB)
 
 ### 🚧 Not Yet Implemented

@@ -1,5 +1,5 @@
 {
-  "name": "@cheapjs/json",
+  "name": "@cheap-ts/json",
   "version": "0.1.0",
   "description": "JSON serialization/deserialization for CHEAP model",
   "type": "module",
@@ -14,14 +14,17 @@
   "scripts": {
     "build": "tsc -b",
     "clean": "rm -rf dist tsconfig.tsbuildinfo",
-    "test": "vitest"
+    "test": "jest"
   },
   "dependencies": {
-    "@cheapjs/core": "file:../cheap-core"
+    "@cheap-ts/core": "^0.1.0"
   },
   "devDependencies": {
-    "@types/node": "^20.0.0",
-    "typescript": "^5.3.0",
-    "vitest": "^1.0.0"
+    "@jest/globals": "^30.0.0",
+    "@types/jest": "^30.0.0",
+    "@types/node": "^24.0.0",
+    "jest": "^30.0.0",
+    "ts-jest": "^29.4.5",
+    "typescript": "^5.9.0"
   }
 }

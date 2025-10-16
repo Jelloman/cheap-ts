@@ -1,8 +1,8 @@
 /**
- * @cheapjs/db-sqlite - SQLite database implementation for CHEAP model
+ * @cheap-ts/db-sqlite - SQLite database implementation for CHEAP model
  */
 
-import { CatalogImpl } from '@cheapjs/core';
+import { CatalogImpl } from '@cheap-ts/core';
 
 /**
  * SQLite-backed catalog implementation.
