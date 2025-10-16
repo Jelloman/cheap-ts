@@ -20,8 +20,9 @@
     "@cheapjs/core": "file:../cheap-core"
   },
   "devDependencies": {
-    "@types/node": "^20.0.0",
-    "typescript": "^5.3.0",
-    "vitest": "^1.0.0"
+    "@types/node": "^24.0.0",
+    "@types/pg": "^8.15.0",
+    "jest": "^30.0.0",
+    "typescript": "^5.9.0"
   }
 }
