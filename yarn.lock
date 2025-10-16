@@ -383,29 +383,29 @@ __metadata:
 
 "@cheapjs/core@file:../cheap-core::locator=%40cheapjs%2Fdb-mariadb%40workspace%3Apackages%2Fcheap-db-mariadb":
   version: 0.1.0
-  resolution: "@cheapjs/core@file:../cheap-core#../cheap-core::hash=b931b9&locator=%40cheapjs%2Fdb-mariadb%40workspace%3Apackages%2Fcheap-db-mariadb"
-  checksum: 10c0/a86fe3786b1e343d90defd31ecfd18d48b4368d23561463e0460b801876070ddf529697c5ce7e060ebc60200df44e7d57ac458f86e347fa25e8713088eb6b8be
+  resolution: "@cheapjs/core@file:../cheap-core#../cheap-core::hash=95b475&locator=%40cheapjs%2Fdb-mariadb%40workspace%3Apackages%2Fcheap-db-mariadb"
+  checksum: 10c0/a9931618b776b6bc92b3eea5ab854c9a3226d5394e0d789f870ab542d7b509423fabde7c41018af1d93f3f766de1b25eb6e45159769cd636ecf7534d54609a0b
   languageName: node
   linkType: hard
 
 "@cheapjs/core@file:../cheap-core::locator=%40cheapjs%2Fdb-postgres%40workspace%3Apackages%2Fcheap-db-postgres":
   version: 0.1.0
-  resolution: "@cheapjs/core@file:../cheap-core#../cheap-core::hash=b931b9&locator=%40cheapjs%2Fdb-postgres%40workspace%3Apackages%2Fcheap-db-postgres"
-  checksum: 10c0/a86fe3786b1e343d90defd31ecfd18d48b4368d23561463e0460b801876070ddf529697c5ce7e060ebc60200df44e7d57ac458f86e347fa25e8713088eb6b8be
+  resolution: "@cheapjs/core@file:../cheap-core#../cheap-core::hash=95b475&locator=%40cheapjs%2Fdb-postgres%40workspace%3Apackages%2Fcheap-db-postgres"
+  checksum: 10c0/a9931618b776b6bc92b3eea5ab854c9a3226d5394e0d789f870ab542d7b509423fabde7c41018af1d93f3f766de1b25eb6e45159769cd636ecf7534d54609a0b
   languageName: node
   linkType: hard
 
 "@cheapjs/core@file:../cheap-core::locator=%40cheapjs%2Fdb-sqlite%40workspace%3Apackages%2Fcheap-db-sqlite":
   version: 0.1.0
-  resolution: "@cheapjs/core@file:../cheap-core#../cheap-core::hash=b931b9&locator=%40cheapjs%2Fdb-sqlite%40workspace%3Apackages%2Fcheap-db-sqlite"
-  checksum: 10c0/a86fe3786b1e343d90defd31ecfd18d48b4368d23561463e0460b801876070ddf529697c5ce7e060ebc60200df44e7d57ac458f86e347fa25e8713088eb6b8be
+  resolution: "@cheapjs/core@file:../cheap-core#../cheap-core::hash=95b475&locator=%40cheapjs%2Fdb-sqlite%40workspace%3Apackages%2Fcheap-db-sqlite"
+  checksum: 10c0/a9931618b776b6bc92b3eea5ab854c9a3226d5394e0d789f870ab542d7b509423fabde7c41018af1d93f3f766de1b25eb6e45159769cd636ecf7534d54609a0b
   languageName: node
   linkType: hard
 
 "@cheapjs/core@file:../cheap-core::locator=%40cheapjs%2Fjson%40workspace%3Apackages%2Fcheap-json":
   version: 0.1.0
-  resolution: "@cheapjs/core@file:../cheap-core#../cheap-core::hash=b931b9&locator=%40cheapjs%2Fjson%40workspace%3Apackages%2Fcheap-json"
-  checksum: 10c0/a86fe3786b1e343d90defd31ecfd18d48b4368d23561463e0460b801876070ddf529697c5ce7e060ebc60200df44e7d57ac458f86e347fa25e8713088eb6b8be
+  resolution: "@cheapjs/core@file:../cheap-core#../cheap-core::hash=95b475&locator=%40cheapjs%2Fjson%40workspace%3Apackages%2Fcheap-json"
+  checksum: 10c0/a9931618b776b6bc92b3eea5ab854c9a3226d5394e0d789f870ab542d7b509423fabde7c41018af1d93f3f766de1b25eb6e45159769cd636ecf7534d54609a0b
   languageName: node
   linkType: hard
 
