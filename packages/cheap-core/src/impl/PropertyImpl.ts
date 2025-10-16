@@ -150,13 +150,29 @@ export class PropertyDefImpl implements PropertyDef {
         // we examine only the first element, if there is one.
         if (value.length > 0) {
           const element = value[0];
-          if (element != null && !(element instanceof expectedJsType)) {
-            if (throwExceptions) {
-              throw new Error(
-                `Property '${this.name()}' expects Array<${expectedJsType.name}> but the first element is ${typeof element}`
-              );
+          if (element != null) {
+            let isValid = false;
+            if (expectedJsType === Number) {
+              isValid = typeof element === 'number';
+            } else if (expectedJsType === String) {
+              isValid = typeof element === 'string';
+            } else if (expectedJsType === Boolean) {
+              isValid = typeof element === 'boolean';
+            } else if (expectedJsType === BigInt) {
+              isValid = typeof element === 'bigint';
+            } else {
+              // For object types (Date, URL, Uint8Array, etc.), use instanceof
+              isValid = element instanceof expectedJsType;
             }
-            return false;
+
+            if (!isValid) {
+              if (throwExceptions) {
+                throw new Error(
+                  `Property '${this.name()}' expects Array<${expectedJsType.name}> but the first element is ${typeof element}`
+                );
+              }
+              return false;
+            }
           }
         }
       } else {
