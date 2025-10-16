@@ -1,5 +1,5 @@
 /**
- * @cheapjs/core - Core CHEAP model implementation
+ * @cheap-ts/core - Core CHEAP model implementation
  *
  * CHEAP: Catalog, Hierarchy, Entity, Aspect, Property
  * A git-like system for structured data

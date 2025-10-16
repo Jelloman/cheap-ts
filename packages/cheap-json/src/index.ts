@@ -1,8 +1,8 @@
 /**
- * @cheapjs/json - JSON serialization/deserialization for CHEAP model
+ * @cheap-ts/json - JSON serialization/deserialization for CHEAP model
  */
 
-import type { Aspect, Entity, Catalog, Hierarchy } from '@cheapjs/core';
+import type { Aspect, Entity, Catalog, Hierarchy } from '@cheap-ts/core';
 
 export interface Serializer<T> {
   serialize(value: T): string;
