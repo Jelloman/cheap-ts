@@ -39,7 +39,7 @@ describe('ImmutableAspectDefImpl', () => {
     });
 
     it('should throw when property map is null', () => {
-      expect(() => new ImmutableAspectDefImpl('testAspect', null as any)).toThrow();
+      expect(() => new ImmutableAspectDefImpl('testAspect', null as never)).toThrow();
     });
 
     it('should copy property map and not retain reference', () => {
@@ -179,14 +179,14 @@ describe('ImmutableAspectDefImpl', () => {
 
       try {
         aspectDef.add(propDef3);
-        fail('Expected error');
+        throw new Error('Expected error to be thrown');
       } catch (e: any) {
         expect(e.message).toContain(aspectName);
       }
 
       try {
         aspectDef.remove(propDef1);
-        fail('Expected error');
+        throw new Error('Expected error to be thrown');
       } catch (e: any) {
         expect(e.message).toContain(aspectName);
       }

@@ -5,7 +5,7 @@ import {
   FullAspectDefImpl,
 } from './AspectDefImpl.js';
 import { PropertyDefBuilder } from './PropertyDefBuilder.js';
-import { PropertyDef } from '../interfaces/Property.js';
+import { PropertyDef } from '../interfaces';
 import { PropertyType } from '../types.js';
 
 /**
