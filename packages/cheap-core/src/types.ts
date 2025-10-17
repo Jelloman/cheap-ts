@@ -97,7 +97,7 @@ export class PropertyType {
   private constructor(
     private readonly _typeCode: string,
     private readonly _name: string,
-    private readonly _jsType: new (...args: any[]) => any
+    private readonly _jsType: (new (...args: any[]) => any) | ((...args: any[]) => any)
   ) {
     PropertyType.LOOKUP.set(_typeCode.toUpperCase(), this);
   }
@@ -118,7 +118,7 @@ export class PropertyType {
    *
    * @returns the JavaScript type that represents this property type's values, never null
    */
-  getJsType(): new (...args: any[]) => any {
+  getJsType(): (new (...args: any[]) => any) | ((...args: any[]) => any) {
     return this._jsType;
   }
 
