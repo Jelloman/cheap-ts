@@ -94,14 +94,11 @@ export class CheapHasher {
    * @return the 64-bit hash value
    */
   static hashBytes(seed: bigint, bytes: Uint8Array | null): bigint;
-  static hashBytes(
-    seedOrBytes: bigint | Uint8Array | null,
-    bytes?: Uint8Array | null
-  ): bigint {
+  static hashBytes(seedOrBytes: bigint | Uint8Array | null, bytes?: Uint8Array | null): bigint {
     let seed: bigint;
     let data: Uint8Array | null;
 
-    if (typeof seedOrBytes === 'bigint') {
+    if (typeof seedOrBytes === "bigint") {
       seed = seedOrBytes;
       data = bytes ?? null;
     } else {
@@ -136,14 +133,11 @@ export class CheapHasher {
    * @return the 64-bit hash value
    */
   static hashString(seed: bigint, value: string | null): bigint;
-  static hashString(
-    seedOrValue: bigint | string | null,
-    value?: string | null
-  ): bigint {
+  static hashString(seedOrValue: bigint | string | null, value?: string | null): bigint {
     let seed: bigint;
     let str: string | null;
 
-    if (typeof seedOrValue === 'bigint') {
+    if (typeof seedOrValue === "bigint") {
       seed = seedOrValue;
       str = value ?? null;
     } else {
@@ -180,7 +174,7 @@ export class CheapHasher {
     let seed: bigint;
     let num: number;
 
-    if (typeof seedOrValue === 'bigint') {
+    if (typeof seedOrValue === "bigint") {
       seed = seedOrValue;
       num = value!;
     } else {
@@ -224,10 +218,7 @@ export class CheapHasher {
    * @return the 64-bit hash value
    */
   static hashBigInt(seed: bigint, value: bigint | null): bigint;
-  static hashBigInt(
-    seedOrValue: bigint | null,
-    value?: bigint | null
-  ): bigint {
+  static hashBigInt(seedOrValue: bigint | null, value?: bigint | null): bigint {
     let seed: bigint;
     let bigIntValue: bigint | null;
 
@@ -266,7 +257,7 @@ export class CheapHasher {
     let seed: bigint;
     let bool: boolean;
 
-    if (typeof seedOrValue === 'bigint') {
+    if (typeof seedOrValue === "bigint") {
       seed = seedOrValue;
       bool = value!;
     } else {
@@ -299,7 +290,7 @@ export class CheapHasher {
     let seed: bigint;
     let date: Date | null;
 
-    if (typeof seedOrValue === 'bigint') {
+    if (typeof seedOrValue === "bigint") {
       seed = seedOrValue;
       date = value ?? null;
     } else {
@@ -333,7 +324,7 @@ export class CheapHasher {
     let seed: bigint;
     let url: URL | null;
 
-    if (typeof seedOrValue === 'bigint') {
+    if (typeof seedOrValue === "bigint") {
       seed = seedOrValue;
       url = value ?? null;
     } else {
@@ -365,14 +356,11 @@ export class CheapHasher {
    * @return the 64-bit hash value
    */
   static hashUUID(seed: bigint, value: string | null): bigint;
-  static hashUUID(
-    seedOrValue: bigint | string | null,
-    value?: string | null
-  ): bigint {
+  static hashUUID(seedOrValue: bigint | string | null, value?: string | null): bigint {
     let seed: bigint;
     let uuid: string | null;
 
-    if (typeof seedOrValue === 'bigint') {
+    if (typeof seedOrValue === "bigint") {
       seed = seedOrValue;
       uuid = value ?? null;
     } else {
@@ -386,7 +374,7 @@ export class CheapHasher {
 
     // Parse UUID string to extract most/least significant bits
     // Format: xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx
-    const hex = uuid.replace(/-/g, '');
+    const hex = uuid.replace(/-/g, "");
     if (hex.length !== 32) {
       throw new Error(`Invalid UUID format: ${uuid}`);
     }
@@ -395,8 +383,8 @@ export class CheapHasher {
     const msbHex = hex.substring(0, 16);
     const lsbHex = hex.substring(16, 32);
 
-    let msb = BigInt('0x' + msbHex);
-    let lsb = BigInt('0x' + lsbHex);
+    let msb = BigInt("0x" + msbHex);
+    let lsb = BigInt("0x" + lsbHex);
 
     let hash = seed;
 
@@ -539,13 +527,13 @@ export class CheapHasher {
   update(value: unknown): this {
     if (value === null || value === undefined) {
       this.hash = CheapHasher.hashNull(this.hash);
-    } else if (typeof value === 'string') {
+    } else if (typeof value === "string") {
       this.updateString(value);
-    } else if (typeof value === 'number') {
+    } else if (typeof value === "number") {
       this.updateNumber(value);
-    } else if (typeof value === 'bigint') {
+    } else if (typeof value === "bigint") {
       this.updateBigInt(value);
-    } else if (typeof value === 'boolean') {
+    } else if (typeof value === "boolean") {
       this.updateBoolean(value);
     } else if (value instanceof Date) {
       this.updateDate(value);

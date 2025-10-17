@@ -6,10 +6,10 @@
  * and provides organized access to entities within a catalog.
  */
 
-import { Entity } from './Entity.js';
-import { Aspect, AspectDef } from './Aspect.js';
-import { Catalog } from './Catalog.js';
-import { HierarchyType } from '../types.js';
+import { Entity } from "./Entity.js";
+import { Aspect, AspectDef } from "./Aspect.js";
+import { Catalog } from "./Catalog.js";
+import { HierarchyType } from "../types.js";
 
 /**
  * Defines the metadata and characteristics of a hierarchy within the Cheap data model.

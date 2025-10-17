@@ -1,16 +1,16 @@
-import { describe, it, expect } from '@jest/globals';
-import { CheapHasher } from './CheapHasher.js';
+import { describe, it, expect } from "@jest/globals";
+import { CheapHasher } from "./CheapHasher.js";
 
 /**
  * Unit tests for the CheapHasher class.
  * Tests FNV-1a hash computation for all supported types.
  */
-describe('CheapHasher', () => {
-  describe('hashString', () => {
-    it('should hash strings consistently', () => {
-      const str1 = 'hello';
-      const str2 = 'hello';
-      const str3 = 'world';
+describe("CheapHasher", () => {
+  describe("hashString", () => {
+    it("should hash strings consistently", () => {
+      const str1 = "hello";
+      const str2 = "hello";
+      const str3 = "world";
 
       const hash1 = CheapHasher.hashString(str1);
       const hash2 = CheapHasher.hashString(str2);
@@ -28,8 +28,8 @@ describe('CheapHasher', () => {
     });
   });
 
-  describe('hashNumber (as Long)', () => {
-    it('should hash integer numbers consistently', () => {
+  describe("hashNumber (as Long)", () => {
+    it("should hash integer numbers consistently", () => {
       const long1 = 12345;
       const long2 = 12345;
       const long3 = 67890;
@@ -46,8 +46,8 @@ describe('CheapHasher', () => {
     });
   });
 
-  describe('hashNumber (as Double)', () => {
-    it('should hash floating-point numbers consistently', () => {
+  describe("hashNumber (as Double)", () => {
+    it("should hash floating-point numbers consistently", () => {
       const double1 = 3.14159;
       const double2 = 3.14159;
       const double3 = 2.71828;
@@ -64,8 +64,8 @@ describe('CheapHasher', () => {
     });
   });
 
-  describe('hashBoolean', () => {
-    it('should hash booleans consistently', () => {
+  describe("hashBoolean", () => {
+    it("should hash booleans consistently", () => {
       const bool1 = true;
       const bool2 = true;
       const bool3 = false;
@@ -82,8 +82,8 @@ describe('CheapHasher', () => {
     });
   });
 
-  describe('hashBytes', () => {
-    it('should hash byte arrays consistently', () => {
+  describe("hashBytes", () => {
+    it("should hash byte arrays consistently", () => {
       const bytes1 = new Uint8Array([1, 2, 3, 4, 5]);
       const bytes2 = new Uint8Array([1, 2, 3, 4, 5]);
       const bytes3 = new Uint8Array([5, 4, 3, 2, 1]);
@@ -109,11 +109,11 @@ describe('CheapHasher', () => {
     });
   });
 
-  describe('hashBigInt', () => {
-    it('should hash BigIntegers consistently', () => {
-      const bigInt1 = BigInt('123456789012345678901234567890');
-      const bigInt2 = BigInt('123456789012345678901234567890');
-      const bigInt3 = BigInt('987654321098765432109876543210');
+  describe("hashBigInt", () => {
+    it("should hash BigIntegers consistently", () => {
+      const bigInt1 = BigInt("123456789012345678901234567890");
+      const bigInt2 = BigInt("123456789012345678901234567890");
+      const bigInt3 = BigInt("987654321098765432109876543210");
 
       const hash1 = CheapHasher.hashBigInt(bigInt1);
       const hash2 = CheapHasher.hashBigInt(bigInt2);
@@ -131,11 +131,11 @@ describe('CheapHasher', () => {
     });
   });
 
-  describe('hashDate (ZonedDateTime)', () => {
-    it('should hash dates consistently', () => {
-      const time1 = new Date('2025-01-15T10:30:00Z');
-      const time2 = new Date('2025-01-15T10:30:00Z');
-      const time3 = new Date('2025-12-31T23:59:59Z');
+  describe("hashDate (ZonedDateTime)", () => {
+    it("should hash dates consistently", () => {
+      const time1 = new Date("2025-01-15T10:30:00Z");
+      const time2 = new Date("2025-01-15T10:30:00Z");
+      const time3 = new Date("2025-12-31T23:59:59Z");
 
       const hash1 = CheapHasher.hashDate(time1);
       const hash2 = CheapHasher.hashDate(time2);
@@ -153,11 +153,11 @@ describe('CheapHasher', () => {
     });
   });
 
-  describe('hashURL (URI)', () => {
-    it('should hash URLs consistently', () => {
-      const uri1 = new URL('https://example.com/path');
-      const uri2 = new URL('https://example.com/path');
-      const uri3 = new URL('https://example.org/other');
+  describe("hashURL (URI)", () => {
+    it("should hash URLs consistently", () => {
+      const uri1 = new URL("https://example.com/path");
+      const uri2 = new URL("https://example.com/path");
+      const uri3 = new URL("https://example.org/other");
 
       const hash1 = CheapHasher.hashURL(uri1);
       const hash2 = CheapHasher.hashURL(uri2);
@@ -175,11 +175,11 @@ describe('CheapHasher', () => {
     });
   });
 
-  describe('hashUUID', () => {
-    it('should hash UUIDs consistently', () => {
-      const uuid1 = '123e4567-e89b-12d3-a456-426614174000';
-      const uuid2 = '123e4567-e89b-12d3-a456-426614174000';
-      const uuid3 = '987fcdeb-51a2-43f1-89ab-fedcba987654';
+  describe("hashUUID", () => {
+    it("should hash UUIDs consistently", () => {
+      const uuid1 = "123e4567-e89b-12d3-a456-426614174000";
+      const uuid2 = "123e4567-e89b-12d3-a456-426614174000";
+      const uuid3 = "987fcdeb-51a2-43f1-89ab-fedcba987654";
 
       const hash1 = CheapHasher.hashUUID(uuid1);
       const hash2 = CheapHasher.hashUUID(uuid2);
@@ -197,12 +197,12 @@ describe('CheapHasher', () => {
     });
   });
 
-  describe('instance hasher', () => {
-    it('should maintain rolling hash', () => {
+  describe("instance hasher", () => {
+    it("should maintain rolling hash", () => {
       const hasher = new CheapHasher();
 
       // Update with multiple values
-      hasher.updateString('hello');
+      hasher.updateString("hello");
       const hash1 = hasher.getHash();
 
       hasher.updateNumber(42);
@@ -217,11 +217,11 @@ describe('CheapHasher', () => {
     });
   });
 
-  describe('reset', () => {
-    it('should reset hash to default offset basis', () => {
+  describe("reset", () => {
+    it("should reset hash to default offset basis", () => {
       const hasher = new CheapHasher();
 
-      hasher.updateString('hello');
+      hasher.updateString("hello");
       const hash1 = hasher.getHash();
 
       hasher.reset();
@@ -231,7 +231,7 @@ describe('CheapHasher', () => {
       const fresh = new CheapHasher();
       expect(resetHash).toBe(fresh.getHash());
 
-      hasher.updateString('hello');
+      hasher.updateString("hello");
       const hash2 = hasher.getHash();
 
       // After reset and same update, should get same hash
@@ -239,32 +239,32 @@ describe('CheapHasher', () => {
     });
   });
 
-  describe('custom seed', () => {
-    it('should support custom seed values', () => {
+  describe("custom seed", () => {
+    it("should support custom seed values", () => {
       const seed = 0x123456789abcdef0n;
       const hasher1 = new CheapHasher(seed);
       const hasher2 = new CheapHasher(seed);
 
       expect(hasher1.getHash()).toBe(hasher2.getHash());
 
-      hasher1.updateString('test');
-      hasher2.updateString('test');
+      hasher1.updateString("test");
+      hasher2.updateString("test");
 
       expect(hasher1.getHash()).toBe(hasher2.getHash());
     });
 
-    it('should reset with custom seed', () => {
+    it("should reset with custom seed", () => {
       const seed = 0xfedcba9876543210n;
       const hasher = new CheapHasher();
 
       hasher.reset(seed);
       expect(hasher.getHash()).toBe(seed);
 
-      hasher.updateString('data');
+      hasher.updateString("data");
       const hash1 = hasher.getHash();
 
       hasher.reset(seed);
-      hasher.updateString('data');
+      hasher.updateString("data");
       const hash2 = hasher.getHash();
 
       // Resetting to same seed and applying same updates should give same result
@@ -272,16 +272,16 @@ describe('CheapHasher', () => {
     });
   });
 
-  describe('instance update methods', () => {
-    it('should match static methods for String', () => {
+  describe("instance update methods", () => {
+    it("should match static methods for String", () => {
       const hasher = new CheapHasher();
-      hasher.updateString('test');
+      hasher.updateString("test");
 
-      const staticHash = CheapHasher.hashString('test');
+      const staticHash = CheapHasher.hashString("test");
       expect(hasher.getHash()).toBe(staticHash);
     });
 
-    it('should match static methods for Long', () => {
+    it("should match static methods for Long", () => {
       const hasher = new CheapHasher();
       hasher.updateNumber(12345);
 
@@ -289,7 +289,7 @@ describe('CheapHasher', () => {
       expect(hasher.getHash()).toBe(staticHash);
     });
 
-    it('should match static methods for Double', () => {
+    it("should match static methods for Double", () => {
       const hasher = new CheapHasher();
       hasher.updateNumber(3.14159);
 
@@ -297,7 +297,7 @@ describe('CheapHasher', () => {
       expect(hasher.getHash()).toBe(staticHash);
     });
 
-    it('should match static methods for Boolean', () => {
+    it("should match static methods for Boolean", () => {
       const hasher = new CheapHasher();
       hasher.updateBoolean(true);
 
@@ -305,7 +305,7 @@ describe('CheapHasher', () => {
       expect(hasher.getHash()).toBe(staticHash);
     });
 
-    it('should match static methods for byte array', () => {
+    it("should match static methods for byte array", () => {
       const bytes = new Uint8Array([1, 2, 3, 4, 5]);
       const hasher = new CheapHasher();
       hasher.updateBytes(bytes);
@@ -314,8 +314,8 @@ describe('CheapHasher', () => {
       expect(hasher.getHash()).toBe(staticHash);
     });
 
-    it('should match static methods for BigInteger', () => {
-      const bigInt = BigInt('123456789012345678901234567890');
+    it("should match static methods for BigInteger", () => {
+      const bigInt = BigInt("123456789012345678901234567890");
       const hasher = new CheapHasher();
       hasher.updateBigInt(bigInt);
 
@@ -323,8 +323,8 @@ describe('CheapHasher', () => {
       expect(hasher.getHash()).toBe(staticHash);
     });
 
-    it('should match static methods for Date', () => {
-      const time = new Date('2025-01-15T10:30:00Z');
+    it("should match static methods for Date", () => {
+      const time = new Date("2025-01-15T10:30:00Z");
       const hasher = new CheapHasher();
       hasher.updateDate(time);
 
@@ -332,8 +332,8 @@ describe('CheapHasher', () => {
       expect(hasher.getHash()).toBe(staticHash);
     });
 
-    it('should match static methods for URL', () => {
-      const uri = new URL('https://example.com/path');
+    it("should match static methods for URL", () => {
+      const uri = new URL("https://example.com/path");
       const hasher = new CheapHasher();
       hasher.updateURL(uri);
 
@@ -341,8 +341,8 @@ describe('CheapHasher', () => {
       expect(hasher.getHash()).toBe(staticHash);
     });
 
-    it('should match static methods for UUID', () => {
-      const uuid = '123e4567-e89b-12d3-a456-426614174000';
+    it("should match static methods for UUID", () => {
+      const uuid = "123e4567-e89b-12d3-a456-426614174000";
       const hasher = new CheapHasher();
       hasher.updateUUID(uuid);
 
@@ -351,12 +351,12 @@ describe('CheapHasher', () => {
     });
   });
 
-  describe('method chaining', () => {
-    it('should support method chaining', () => {
+  describe("method chaining", () => {
+    it("should support method chaining", () => {
       const hasher = new CheapHasher();
 
       const result = hasher
-        .updateString('hello')
+        .updateString("hello")
         .updateNumber(42)
         .updateNumber(3.14)
         .updateBoolean(true)
@@ -366,22 +366,22 @@ describe('CheapHasher', () => {
     });
   });
 
-  describe('rolling hash order', () => {
-    it('should produce different hashes for different order', () => {
+  describe("rolling hash order", () => {
+    it("should produce different hashes for different order", () => {
       const hasher1 = new CheapHasher();
-      hasher1.updateString('hello').updateString('world');
+      hasher1.updateString("hello").updateString("world");
 
       const hasher2 = new CheapHasher();
-      hasher2.updateString('world').updateString('hello');
+      hasher2.updateString("world").updateString("hello");
 
       // Different order should produce different hashes
       expect(hasher1.getHash()).not.toBe(hasher2.getHash());
     });
   });
 
-  describe('consistent hash across instances', () => {
-    it('should produce consistent hashes', () => {
-      const testString = 'consistent test';
+  describe("consistent hash across instances", () => {
+    it("should produce consistent hashes", () => {
+      const testString = "consistent test";
 
       const hash1 = CheapHasher.hashString(testString);
       const hash2 = CheapHasher.hashString(testString);
@@ -392,8 +392,8 @@ describe('CheapHasher', () => {
     });
   });
 
-  describe('null handling', () => {
-    it('should hash all null values the same', () => {
+  describe("null handling", () => {
+    it("should hash all null values the same", () => {
       const hasher = new CheapHasher();
 
       hasher.updateString(null);
@@ -421,30 +421,30 @@ describe('CheapHasher', () => {
     });
   });
 
-  describe('complex rolling hash', () => {
-    it('should handle mixed types in sequence', () => {
+  describe("complex rolling hash", () => {
+    it("should handle mixed types in sequence", () => {
       const hasher1 = new CheapHasher();
       hasher1
-        .updateString('test string')
+        .updateString("test string")
         .updateNumber(42)
         .updateNumber(3.14159)
         .updateBoolean(true)
-        .updateBigInt(BigInt('123456789'))
-        .updateDate(new Date('2025-01-15T10:30:00Z'))
-        .updateURL(new URL('https://example.com'))
-        .updateUUID('123e4567-e89b-12d3-a456-426614174000')
+        .updateBigInt(BigInt("123456789"))
+        .updateDate(new Date("2025-01-15T10:30:00Z"))
+        .updateURL(new URL("https://example.com"))
+        .updateUUID("123e4567-e89b-12d3-a456-426614174000")
         .updateBytes(new Uint8Array([1, 2, 3, 4, 5]));
 
       const hasher2 = new CheapHasher();
       hasher2
-        .updateString('test string')
+        .updateString("test string")
         .updateNumber(42)
         .updateNumber(3.14159)
         .updateBoolean(true)
-        .updateBigInt(BigInt('123456789'))
-        .updateDate(new Date('2025-01-15T10:30:00Z'))
-        .updateURL(new URL('https://example.com'))
-        .updateUUID('123e4567-e89b-12d3-a456-426614174000')
+        .updateBigInt(BigInt("123456789"))
+        .updateDate(new Date("2025-01-15T10:30:00Z"))
+        .updateURL(new URL("https://example.com"))
+        .updateUUID("123e4567-e89b-12d3-a456-426614174000")
         .updateBytes(new Uint8Array([1, 2, 3, 4, 5]));
 
       // Same sequence should produce same hash
@@ -452,9 +452,9 @@ describe('CheapHasher', () => {
     });
   });
 
-  describe('different values same type', () => {
-    it('should produce different hashes for different strings', () => {
-      const strings = ['a', 'b', 'c', 'abc', 'xyz', 'test', 'hello', 'world'];
+  describe("different values same type", () => {
+    it("should produce different hashes for different strings", () => {
+      const strings = ["a", "b", "c", "abc", "xyz", "test", "hello", "world"];
 
       for (let i = 0; i < strings.length; i++) {
         for (let j = i + 1; j < strings.length; j++) {
@@ -465,7 +465,7 @@ describe('CheapHasher', () => {
       }
     });
 
-    it('should produce different hashes for different numbers', () => {
+    it("should produce different hashes for different numbers", () => {
       const numbers = [0, 1, 2, 100, 1000, -1, -100];
 
       for (let i = 0; i < numbers.length; i++) {
@@ -477,7 +477,7 @@ describe('CheapHasher', () => {
       }
     });
 
-    it('should produce different hashes for different doubles', () => {
+    it("should produce different hashes for different doubles", () => {
       const doubles = [0.0, 1.0, -1.0, 3.14, 2.71];
 
       for (let i = 0; i < doubles.length; i++) {
@@ -490,23 +490,23 @@ describe('CheapHasher', () => {
     });
   });
 
-  describe('UTF-8 encoding', () => {
-    it('should properly encode unicode strings', () => {
-      const unicodeString = 'Hello \u4E16\u754C'; // "Hello 世界"
+  describe("UTF-8 encoding", () => {
+    it("should properly encode unicode strings", () => {
+      const unicodeString = "Hello \u4E16\u754C"; // "Hello 世界"
       const hash = CheapHasher.hashString(unicodeString);
 
       // Should produce consistent hash
       expect(hash).toBe(CheapHasher.hashString(unicodeString));
 
       // Different unicode strings should produce different hashes
-      const otherUnicode = 'Hello \u65E5\u672C'; // "Hello 日本"
+      const otherUnicode = "Hello \u65E5\u672C"; // "Hello 日本"
       expect(hash).not.toBe(CheapHasher.hashString(otherUnicode));
     });
   });
 
-  describe('empty inputs', () => {
-    it('should hash empty string and empty bytes the same', () => {
-      const emptyStringHash = CheapHasher.hashString('');
+  describe("empty inputs", () => {
+    it("should hash empty string and empty bytes the same", () => {
+      const emptyStringHash = CheapHasher.hashString("");
       const emptyBytesHash = CheapHasher.hashBytes(new Uint8Array(0));
 
       // Empty string and empty bytes should produce same hash
@@ -514,33 +514,33 @@ describe('CheapHasher', () => {
       expect(emptyStringHash).toBe(emptyBytesHash);
 
       // But different from a non-empty input
-      expect(emptyStringHash).not.toBe(CheapHasher.hashString('a'));
+      expect(emptyStringHash).not.toBe(CheapHasher.hashString("a"));
     });
   });
 
-  describe('UUID components', () => {
-    it('should hash UUIDs based on their bits', () => {
-      const uuid = '123e4567-e89b-12d3-a456-426614174000';
+  describe("UUID components", () => {
+    it("should hash UUIDs based on their bits", () => {
+      const uuid = "123e4567-e89b-12d3-a456-426614174000";
       const hash1 = CheapHasher.hashUUID(uuid);
 
       // Same UUID should always produce same hash
-      const sameUuid = '123e4567-e89b-12d3-a456-426614174000';
+      const sameUuid = "123e4567-e89b-12d3-a456-426614174000";
       const hash2 = CheapHasher.hashUUID(sameUuid);
 
       expect(hash1).toBe(hash2);
 
       // UUID with only 1 bit different should produce different hash
-      const differentUuid = '123e4567-e89b-12d3-a456-426614174001';
+      const differentUuid = "123e4567-e89b-12d3-a456-426614174001";
       const hash3 = CheapHasher.hashUUID(differentUuid);
 
       expect(hash1).not.toBe(hash3);
     });
   });
 
-  describe('static hash with seed', () => {
-    it('should support seed parameter for strings', () => {
+  describe("static hash with seed", () => {
+    it("should support seed parameter for strings", () => {
       const seed = 0x123456789abcdef0n;
-      const testString = 'test';
+      const testString = "test";
 
       // Hash with default seed
       const defaultHash = CheapHasher.hashString(testString);
@@ -556,12 +556,12 @@ describe('CheapHasher', () => {
       expect(customHash).toBe(customHash2);
     });
 
-    it('should support seed for all types', () => {
+    it("should support seed for all types", () => {
       const seed = 0xfedcba9876543210n;
 
       // Test with different types
-      const stringHash1 = CheapHasher.hashString(seed, 'test');
-      const stringHash2 = CheapHasher.hashString(seed, 'test');
+      const stringHash1 = CheapHasher.hashString(seed, "test");
+      const stringHash2 = CheapHasher.hashString(seed, "test");
       expect(stringHash1).toBe(stringHash2);
 
       const numberHash1 = CheapHasher.hashNumber(seed, 12345);
@@ -581,29 +581,29 @@ describe('CheapHasher', () => {
       const bytesHash2 = CheapHasher.hashBytes(seed, bytes);
       expect(bytesHash1).toBe(bytesHash2);
 
-      const bigInt = BigInt('123456789');
+      const bigInt = BigInt("123456789");
       const bigIntHash1 = CheapHasher.hashBigInt(seed, bigInt);
       const bigIntHash2 = CheapHasher.hashBigInt(seed, bigInt);
       expect(bigIntHash1).toBe(bigIntHash2);
 
-      const time = new Date('2025-01-15T10:30:00Z');
+      const time = new Date("2025-01-15T10:30:00Z");
       const timeHash1 = CheapHasher.hashDate(seed, time);
       const timeHash2 = CheapHasher.hashDate(seed, time);
       expect(timeHash1).toBe(timeHash2);
 
-      const uri = new URL('https://example.com');
+      const uri = new URL("https://example.com");
       const uriHash1 = CheapHasher.hashURL(seed, uri);
       const uriHash2 = CheapHasher.hashURL(seed, uri);
       expect(uriHash1).toBe(uriHash2);
 
-      const uuid = '123e4567-e89b-12d3-a456-426614174000';
+      const uuid = "123e4567-e89b-12d3-a456-426614174000";
       const uuidHash1 = CheapHasher.hashUUID(seed, uuid);
       const uuidHash2 = CheapHasher.hashUUID(seed, uuid);
       expect(uuidHash1).toBe(uuidHash2);
     });
 
-    it('should produce different hashes with different seeds', () => {
-      const value = 'same value';
+    it("should produce different hashes with different seeds", () => {
+      const value = "same value";
 
       const seed1 = 0x1111111111111111n;
       const seed2 = 0x2222222222222222n;
@@ -620,12 +620,12 @@ describe('CheapHasher', () => {
     });
   });
 
-  describe('instance uses static methods', () => {
-    it('should use static methods with instance hash as seed', () => {
+  describe("instance uses static methods", () => {
+    it("should use static methods with instance hash as seed", () => {
       const hasher = new CheapHasher();
 
       // First update
-      const value1 = 'first';
+      const value1 = "first";
       hasher.updateString(value1);
       const afterFirst = hasher.getHash();
 
@@ -634,7 +634,7 @@ describe('CheapHasher', () => {
       expect(afterFirst).toBe(staticEquivalent1);
 
       // Second update
-      const value2 = 'second';
+      const value2 = "second";
       hasher.updateString(value2);
       const afterSecond = hasher.getHash();
 
@@ -644,25 +644,25 @@ describe('CheapHasher', () => {
     });
   });
 
-  describe('rolling hash using seeds', () => {
-    it('should verify rolling hash behavior using seeds', () => {
+  describe("rolling hash using seeds", () => {
+    it("should verify rolling hash behavior using seeds", () => {
       const seed = 0xabcdef0123456789n;
 
       // Build hash step by step
-      const hash1 = CheapHasher.hashString(seed, 'hello');
+      const hash1 = CheapHasher.hashString(seed, "hello");
       const hash2 = CheapHasher.hashNumber(hash1, 42);
       const hash3 = CheapHasher.hashBoolean(hash2, true);
 
       // Should match instance-based rolling hash
       const hasher = new CheapHasher(seed);
-      hasher.updateString('hello').updateNumber(42).updateBoolean(true);
+      hasher.updateString("hello").updateNumber(42).updateBoolean(true);
 
       expect(hash3).toBe(hasher.getHash());
     });
   });
 
-  describe('seed with null values', () => {
-    it('should handle nulls correctly with custom seeds', () => {
+  describe("seed with null values", () => {
+    it("should handle nulls correctly with custom seeds", () => {
       const seed = 0x9999999999999999n;
 
       const nullHash1 = CheapHasher.hashString(seed, null);
@@ -674,7 +674,7 @@ describe('CheapHasher', () => {
       expect(nullHash2).toBe(nullHash3);
 
       // But different from non-null values
-      expect(nullHash1).not.toBe(CheapHasher.hashString(seed, ''));
+      expect(nullHash1).not.toBe(CheapHasher.hashString(seed, ""));
       expect(nullHash1).not.toBe(CheapHasher.hashNumber(seed, 0));
       expect(nullHash1).not.toBe(CheapHasher.hashBoolean(seed, false));
     });

@@ -2,9 +2,9 @@
  * HierarchyDef implementation
  */
 
-import { HierarchyDef } from '../interfaces/Hierarchy.js';
-import { HierarchyType } from '../types.js';
-import { CheapHasher } from '../util/CheapHasher.js';
+import { HierarchyDef } from "../interfaces/Hierarchy.js";
+import { HierarchyType } from "../types.js";
+import { CheapHasher } from "../util/CheapHasher.js";
 
 /**
  * Record-based implementation of HierarchyDef that defines the structure and
@@ -23,10 +23,10 @@ export class HierarchyDefImpl implements HierarchyDef {
    */
   constructor(name: string, type: HierarchyType) {
     if (!name) {
-      throw new Error('HierarchyDef name cannot be null or empty');
+      throw new Error("HierarchyDef name cannot be null or empty");
     }
     if (!type) {
-      throw new Error('HierarchyDef type cannot be null');
+      throw new Error("HierarchyDef type cannot be null");
     }
     this._name = name;
     this._type = type;
@@ -69,10 +69,10 @@ export class HierarchyDefImpl implements HierarchyDef {
     if (this === other) {
       return true;
     }
-    if (typeof other !== 'object' || other === null) {
+    if (typeof other !== "object" || other === null) {
       return false;
     }
-    if (!('name' in other && 'type' in other)) {
+    if (!("name" in other && "type" in other)) {
       return false;
     }
     const otherDef = other as HierarchyDef;

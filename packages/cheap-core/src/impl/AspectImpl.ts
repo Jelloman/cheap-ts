@@ -2,8 +2,8 @@
  * Aspect implementation classes
  */
 
-import { Aspect, AspectDef, Entity, Property } from '../interfaces/index.js';
-import { PropertyImpl } from './PropertyImpl.js';
+import { Aspect, AspectDef, Entity, Property } from "../interfaces/index.js";
+import { PropertyImpl } from "./PropertyImpl.js";
 
 /**
  * Abstract base class for Aspect implementations providing common functionality.
@@ -19,7 +19,7 @@ export abstract class AspectBaseImpl implements Aspect {
    */
   protected constructor(entity: Entity | null, def: AspectDef) {
     if (!def) {
-      throw new Error('Aspect may not have a null AspectDef.');
+      throw new Error("Aspect may not have a null AspectDef.");
     }
     this._entity = entity;
     this._def = def;
@@ -27,7 +27,7 @@ export abstract class AspectBaseImpl implements Aspect {
 
   entity(): Entity {
     if (!this._entity) {
-      throw new Error('Aspect does not have an entity assigned.');
+      throw new Error("Aspect does not have an entity assigned.");
     }
     return this._entity;
   }
@@ -38,12 +38,10 @@ export abstract class AspectBaseImpl implements Aspect {
    */
   setEntity(entity: Entity): void {
     if (!entity) {
-      throw new Error('Aspects may not be assigned a null entity.');
+      throw new Error("Aspects may not be assigned a null entity.");
     }
     if (this._entity && this._entity !== entity && !this.isTransferable()) {
-      throw new Error(
-        'An Aspect flagged as non-transferable may not be reassigned to a different entity.'
-      );
+      throw new Error("An Aspect flagged as non-transferable may not be reassigned to a different entity.");
     }
     this._entity = entity;
   }
@@ -154,7 +152,7 @@ export abstract class AspectBaseImpl implements Aspect {
     const currDef = currProp.def();
     if (currDef !== propDef && !currDef.fullyEquals(propDef)) {
       throw new Error(
-        `PropertyDef '${propName}' is not equal to existing PropertyDef '${currDef.name()}' in Aspect '${name}'.`
+        `PropertyDef '${propName}' is not equal to existing PropertyDef '${currDef.name()}' in Aspect '${name}'.`,
       );
     }
     if (!currDef.isRemovable()) {
@@ -257,9 +255,7 @@ export class AspectPropertyMapImpl extends AspectBaseImpl {
 
     if (!stdPropDef) {
       if (!def.canAddProperties()) {
-        throw new Error(
-          `Aspect '${aspectName}' does not contain prop named '${propName}' and is not extensible.`
-        );
+        throw new Error(`Aspect '${aspectName}' does not contain prop named '${propName}' and is not extensible.`);
       }
       if (!prop.def().isWritable()) {
         throw new Error(`Provided property '${propName}' is marked not writable.`);
@@ -269,9 +265,7 @@ export class AspectPropertyMapImpl extends AspectBaseImpl {
         throw new Error(`Property '${propName}' is not writable.`);
       }
       if (!stdPropDef.fullyEquals(prop.def())) {
-        throw new Error(
-          `Provided definition of '${propName}' conflicts with the existing definition.`
-        );
+        throw new Error(`Provided definition of '${propName}' conflicts with the existing definition.`);
       }
     }
     this.props.set(propName, prop);

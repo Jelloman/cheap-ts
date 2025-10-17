@@ -14,8 +14,8 @@
  *  limitations under the License.
  */
 
-import { PropertyDef } from '../interfaces/Property.js';
-import { PropertyType } from '../types.js';
+import { PropertyDef } from "../interfaces/Property.js";
+import { PropertyType } from "../types.js";
 
 /**
  * Provides coercion functions to allow a wider variety of types to be
@@ -81,9 +81,7 @@ export class PropertyValueAdapter {
       return value;
     }
 
-    throw new Error(
-      `Property '${propDef.name()}' is multivalued and cannot be assigned from ${typeof value}.`
-    );
+    throw new Error(`Property '${propDef.name()}' is multivalued and cannot be assigned from ${typeof value}.`);
   }
 
   /**
@@ -111,11 +109,7 @@ export class PropertyValueAdapter {
         return this.coerceToDouble(value);
       } else if (type === PropertyType.Boolean) {
         return this.coerceToBoolean(value);
-      } else if (
-        type === PropertyType.String ||
-        type === PropertyType.Text ||
-        type === PropertyType.CLOB
-      ) {
+      } else if (type === PropertyType.String || type === PropertyType.Text || type === PropertyType.CLOB) {
         return this.coerceToString(value);
       } else if (type === PropertyType.BigInteger) {
         return this.coerceToBigInteger(value);
@@ -146,47 +140,47 @@ export class PropertyValueAdapter {
   }
 
   public coerceToLong(value: unknown): number {
-    if (typeof value === 'number') {
+    if (typeof value === "number") {
       return Math.floor(value);
     }
-    if (typeof value === 'string') {
+    if (typeof value === "string") {
       const parsed = parseInt(value, 10);
       if (isNaN(parsed)) {
         throw this.illegalArgument(PropertyType.Integer, value);
       }
       return parsed;
     }
-    if (typeof value === 'bigint') {
+    if (typeof value === "bigint") {
       return Number(value);
     }
     throw this.illegalArgument(PropertyType.Integer, value);
   }
 
   public coerceToDouble(value: unknown): number {
-    if (typeof value === 'number') {
+    if (typeof value === "number") {
       return value;
     }
-    if (typeof value === 'string') {
+    if (typeof value === "string") {
       const parsed = parseFloat(value);
       if (isNaN(parsed)) {
         throw this.illegalArgument(PropertyType.Float, value);
       }
       return parsed;
     }
-    if (typeof value === 'bigint') {
+    if (typeof value === "bigint") {
       return Number(value);
     }
     throw this.illegalArgument(PropertyType.Float, value);
   }
 
   public coerceToBoolean(value: unknown): boolean {
-    if (typeof value === 'boolean') {
+    if (typeof value === "boolean") {
       return value;
     }
-    if (typeof value === 'string') {
+    if (typeof value === "string") {
       const lowerValue = value.toLowerCase();
-      if (lowerValue === 'true') return true;
-      if (lowerValue === 'false') return false;
+      if (lowerValue === "true") return true;
+      if (lowerValue === "false") return false;
       // Try to parse as number
       const num = parseFloat(value);
       if (!isNaN(num)) {
@@ -194,32 +188,32 @@ export class PropertyValueAdapter {
       }
       throw this.illegalArgument(PropertyType.Boolean, value);
     }
-    if (typeof value === 'number') {
+    if (typeof value === "number") {
       return value !== 0;
     }
     throw this.illegalArgument(PropertyType.Boolean, value);
   }
 
   public coerceToString(value: unknown): string {
-    if (typeof value === 'string') {
+    if (typeof value === "string") {
       return value;
     }
     if (value === null || value === undefined) {
-      return '';
+      return "";
     }
     return String(value);
   }
 
   public coerceToBigInteger(value: unknown): bigint {
-    if (typeof value === 'bigint') {
+    if (typeof value === "bigint") {
       return value;
     }
-    if (typeof value === 'number') {
+    if (typeof value === "number") {
       return BigInt(Math.floor(value));
     }
-    if (typeof value === 'string') {
+    if (typeof value === "string") {
       // Handle BigDecimal strings by removing decimal part
-      const dotIndex = value.indexOf('.');
+      const dotIndex = value.indexOf(".");
       const integerPart = dotIndex >= 0 ? value.substring(0, dotIndex) : value;
       try {
         return BigInt(integerPart);
@@ -232,17 +226,17 @@ export class PropertyValueAdapter {
 
   public coerceToBigDecimal(value: unknown): string {
     // BigDecimal is stored as string in TypeScript
-    if (typeof value === 'string') {
+    if (typeof value === "string") {
       // Validate it's a valid number string
       if (isNaN(parseFloat(value))) {
         throw this.illegalArgument(PropertyType.BigDecimal, value);
       }
       return value;
     }
-    if (typeof value === 'number') {
+    if (typeof value === "number") {
       return value.toString();
     }
-    if (typeof value === 'bigint') {
+    if (typeof value === "bigint") {
       return value.toString();
     }
     throw this.illegalArgument(PropertyType.BigDecimal, value);
@@ -252,14 +246,14 @@ export class PropertyValueAdapter {
     if (value instanceof Date) {
       return value;
     }
-    if (typeof value === 'string') {
+    if (typeof value === "string") {
       const parsed = new Date(value);
       if (isNaN(parsed.getTime())) {
         throw this.illegalArgument(PropertyType.DateTime, value);
       }
       return parsed;
     }
-    if (typeof value === 'number') {
+    if (typeof value === "number") {
       // Assume timestamp in milliseconds
       return new Date(value);
     }
@@ -270,7 +264,7 @@ export class PropertyValueAdapter {
     if (value instanceof URL) {
       return value;
     }
-    if (typeof value === 'string') {
+    if (typeof value === "string") {
       try {
         return new URL(value);
       } catch (e) {
@@ -281,10 +275,9 @@ export class PropertyValueAdapter {
   }
 
   public coerceToUUID(value: unknown): string {
-    if (typeof value === 'string') {
+    if (typeof value === "string") {
       // Basic UUID validation (8-4-4-4-12 hex digits)
-      const uuidRegex =
-        /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
+      const uuidRegex = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
       if (!uuidRegex.test(value)) {
         throw new Error(`Invalid UUID format: ${value}`);
       }
@@ -300,7 +293,7 @@ export class PropertyValueAdapter {
     if (value instanceof ArrayBuffer) {
       return new Uint8Array(value);
     }
-    if (typeof value === 'string') {
+    if (typeof value === "string") {
       // Parse hex string
       try {
         return this.parseHexString(value);
@@ -324,10 +317,10 @@ export class PropertyValueAdapter {
    */
   private parseHexString(hex: string): Uint8Array {
     // Remove common delimiters
-    const cleanHex = hex.replace(/[\s:-]/g, '');
+    const cleanHex = hex.replace(/[\s:-]/g, "");
 
     if (cleanHex.length % 2 !== 0) {
-      throw new Error('Hex string must have an even number of characters');
+      throw new Error("Hex string must have an even number of characters");
     }
 
     const bytes = new Uint8Array(cleanHex.length / 2);

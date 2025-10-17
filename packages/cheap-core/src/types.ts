@@ -19,85 +19,85 @@ export class PropertyType {
    * 64-bit signed integer values. Uses JavaScript number for representation
    * to ensure full range support and consistency across platforms.
    */
-  static readonly Integer = new PropertyType('INT', 'Integer', Number);
+  static readonly Integer = new PropertyType("INT", "Integer", Number);
 
   /**
    * 64-bit floating-point values (double precision). Provides standard
    * IEEE 754 double-precision floating-point arithmetic.
    */
-  static readonly Float = new PropertyType('FLT', 'Float', Number);
+  static readonly Float = new PropertyType("FLT", "Float", Number);
 
   /**
    * Boolean values supporting true, false, or null states. The null state
    * allows for three-valued logic in data storage and queries.
    */
-  static readonly Boolean = new PropertyType('BLN', 'Boolean', Boolean);
+  static readonly Boolean = new PropertyType("BLN", "Boolean", Boolean);
 
   /**
    * String values with length limited to 8192 characters, processed atomically.
    * Suitable for short text fields, identifiers, and labels where size
    * limits ensure efficient storage and retrieval.
    */
-  static readonly String = new PropertyType('STR', 'String', String);
+  static readonly String = new PropertyType("STR", "String", String);
 
   /**
    * Text values with unlimited length, processed atomically. Suitable for
    * large text content, documents, and descriptions where size flexibility
    * is more important than storage efficiency.
    */
-  static readonly Text = new PropertyType('TXT', 'Text', String);
+  static readonly Text = new PropertyType("TXT", "Text", String);
 
   /**
    * Arbitrary precision integer values with unlimited size. Stored as
    * strings or BigInt to avoid platform-specific size limitations and ensure
    * exact precision for mathematical operations.
    */
-  static readonly BigInteger = new PropertyType('BGI', 'BigInteger', BigInt);
+  static readonly BigInteger = new PropertyType("BGI", "BigInteger", BigInt);
 
   /**
    * Arbitrary precision floating-point values with unlimited size. Stored
    * as strings to avoid platform-specific size limitations and ensure
    * exact precision for mathematical operations.
    */
-  static readonly BigDecimal = new PropertyType('BGF', 'BigDecimal', String);
+  static readonly BigDecimal = new PropertyType("BGF", "BigDecimal", String);
 
   /**
    * Date and time values stored as ISO-8601 formatted strings. This ensures
    * timezone information is preserved and provides human-readable storage
    * with standardized parsing support.
    */
-  static readonly DateTime = new PropertyType('DAT', 'DateTime', Date);
+  static readonly DateTime = new PropertyType("DAT", "DateTime", Date);
 
   /**
    * Uniform Resource Identifier values following RFC 3986 specification.
    * Stored as strings with application-level conversion to/from URL objects
    * to maintain flexibility in handling various URI schemes.
    */
-  static readonly URI = new PropertyType('URI', 'URI', URL);
+  static readonly URI = new PropertyType("URI", "URI", URL);
 
   /**
    * Universally Unique Identifier values following RFC 4122 specification.
    * Stored as strings with application-level conversion to/from UUID objects
    * to ensure consistent representation across different systems.
    */
-  static readonly UUID = new PropertyType('UID', 'UUID', String);
+  static readonly UUID = new PropertyType("UID", "UUID", String);
 
   /**
    * Character Large Object (CLOB) for streaming text data. Represented by
    * a String.
    */
-  static readonly CLOB = new PropertyType('CLB', 'CLOB', String);
+  static readonly CLOB = new PropertyType("CLB", "CLOB", String);
 
   /**
    * Binary Large Object (BLOB) for streaming binary data. Represented by
    * a Uint8Array.
    */
-  static readonly BLOB = new PropertyType('BLB', 'BLOB', Uint8Array);
+  static readonly BLOB = new PropertyType("BLB", "BLOB", Uint8Array);
 
   private constructor(
     private readonly _typeCode: string,
     private readonly _name: string,
-    private readonly _jsType: (new (...args: any[]) => any) | ((...args: any[]) => any)
+    private readonly _jsType: (new (...args: any[]) => any) | ((...args: any[]) => any),
   ) {
     PropertyType.LOOKUP.set(_typeCode.toUpperCase(), this);
   }
@@ -159,31 +159,31 @@ export enum HierarchyType {
    * An ordered list containing only entity IDs. This hierarchy type maintains
    * sequence and allows duplicate references to the same entity.
    */
-  ENTITY_LIST = 'EL',
+  ENTITY_LIST = "EL",
 
   /**
    * A possibly-ordered set containing only unique entity IDs. This hierarchy type
    * ensures no duplicate entity references and provides efficient membership testing.
    */
-  ENTITY_SET = 'ES',
+  ENTITY_SET = "ES",
 
   /**
    * A string-to-entity ID mapping, providing named access to entities.
    * This hierarchy type enables dictionary-like lookups of entities by string keys.
    */
-  ENTITY_DIR = 'ED',
+  ENTITY_DIR = "ED",
 
   /**
    * A tree structure with named nodes where leaves contain entity IDs.
    * This hierarchy type supports hierarchical organization with path-based navigation.
    */
-  ENTITY_TREE = 'ET',
+  ENTITY_TREE = "ET",
 
   /**
    * A possibly-ordered map of entity IDs to aspects of a single type.
    * This hierarchy type provides efficient access to all entities having a specific aspect.
    */
-  ASPECT_MAP = 'AM',
+  ASPECT_MAP = "AM",
 }
 
 /**
@@ -192,15 +192,15 @@ export enum HierarchyType {
 export function hierarchyTypeFromCode(typeCode: string): HierarchyType | undefined {
   const code = typeCode.toUpperCase();
   switch (code) {
-    case 'EL':
+    case "EL":
       return HierarchyType.ENTITY_LIST;
-    case 'ES':
+    case "ES":
       return HierarchyType.ENTITY_SET;
-    case 'ED':
+    case "ED":
       return HierarchyType.ENTITY_DIR;
-    case 'ET':
+    case "ET":
       return HierarchyType.ENTITY_TREE;
-    case 'AM':
+    case "AM":
       return HierarchyType.ASPECT_MAP;
     default:
       return undefined;
@@ -226,35 +226,35 @@ export enum CatalogSpecies {
   /**
    * A Source catalog represents a read-only cache of an external data source.
    */
-  SOURCE = 'SOURCE',
+  SOURCE = "SOURCE",
 
   /**
    * A Sink catalog represents a read-write working copy of an external data source.
    */
-  SINK = 'SINK',
+  SINK = "SINK",
 
   /**
    * A Mirror catalog provides a cached read-only view of another catalog.
    */
-  MIRROR = 'MIRROR',
+  MIRROR = "MIRROR",
 
   /**
    * A Cache catalog provides a write-through view of another catalog.
    * (Writes may be buffered.)
    */
-  CACHE = 'CACHE',
+  CACHE = "CACHE",
 
   /**
    * A Clone catalog is a working copy of another catalog. Reads and writes to and from
    * the upstream catalog are manually invoked.
    */
-  CLONE = 'CLONE',
+  CLONE = "CLONE",
 
   /**
    * A Fork catalog is a transient copy of another catalog, severed from the original.
    * Forks should usually be converted into a Sink, i.e., a permanent copy, AKA "Save As".
    */
-  FORK = 'FORK',
+  FORK = "FORK",
 }
 
 /**
@@ -273,7 +273,7 @@ export enum LocalEntityType {
    * This is the simplest implementation for entities that belong to a single catalog.
    * It provides basic functionality without caching or multi-catalog support.
    */
-  SINGLE_CATALOG = 'SINGLE_CATALOG',
+  SINGLE_CATALOG = "SINGLE_CATALOG",
 
   /**
    * Multi-catalog entity implementation.
@@ -282,7 +282,7 @@ export enum LocalEntityType {
    * This implementation allows entities to belong to multiple catalogs simultaneously.
    * It maintains a set of catalogs and can search across all of them for aspects.
    */
-  MULTI_CATALOG = 'MULTI_CATALOG',
+  MULTI_CATALOG = "MULTI_CATALOG",
 
   /**
    * Caching single-catalog entity implementation.
@@ -291,7 +291,7 @@ export enum LocalEntityType {
    * This implementation extends the single-catalog functionality with aspect caching
    * for improved performance when aspects are frequently accessed.
    */
-  CACHING_SINGLE_CATALOG = 'CACHING_SINGLE_CATALOG',
+  CACHING_SINGLE_CATALOG = "CACHING_SINGLE_CATALOG",
 
   /**
    * Caching multi-catalog entity implementation.
@@ -300,5 +300,5 @@ export enum LocalEntityType {
    * This implementation combines multi-catalog support with aspect caching,
    * providing the most feature-rich LocalEntity implementation.
    */
-  CACHING_MULTI_CATALOG = 'CACHING_MULTI_CATALOG',
+  CACHING_MULTI_CATALOG = "CACHING_MULTI_CATALOG",
 }

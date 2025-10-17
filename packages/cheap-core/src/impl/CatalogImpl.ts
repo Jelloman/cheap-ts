@@ -2,14 +2,14 @@
  * Catalog implementation
  */
 
-import { Catalog, CatalogDef } from '../interfaces/Catalog.js';
-import { Hierarchy, HierarchyDef, AspectMapHierarchy } from '../interfaces/Hierarchy.js';
-import { AspectDef } from '../interfaces/Aspect.js';
-import { CatalogSpecies } from '../types.js';
-import { LocalEntityOneCatalogImpl } from './EntityImpl.js';
-import { AspectMapHierarchyImpl } from './HierarchyImpl.js';
-import { CheapHasher } from '../util/CheapHasher.js';
-import { randomUUID } from 'crypto';
+import { Catalog, CatalogDef } from "../interfaces/Catalog.js";
+import { Hierarchy, HierarchyDef, AspectMapHierarchy } from "../interfaces/Hierarchy.js";
+import { AspectDef } from "../interfaces/Aspect.js";
+import { CatalogSpecies } from "../types.js";
+import { LocalEntityOneCatalogImpl } from "./EntityImpl.js";
+import { AspectMapHierarchyImpl } from "./HierarchyImpl.js";
+import { CheapHasher } from "../util/CheapHasher.js";
+import { randomUUID } from "crypto";
 
 /**
  * Basic implementation of a CatalogDef that defines the structure and properties
@@ -48,12 +48,9 @@ export class CatalogDefImpl implements CatalogDef {
    */
   constructor(hierarchyDefs: Iterable<HierarchyDef>, aspectDefs: Iterable<AspectDef>);
 
-  constructor(
-    hierarchyDefsOrOther?: Iterable<HierarchyDef> | CatalogDef,
-    aspectDefs?: Iterable<AspectDef>
-  ) {
+  constructor(hierarchyDefsOrOther?: Iterable<HierarchyDef> | CatalogDef, aspectDefs?: Iterable<AspectDef>) {
     if (hierarchyDefsOrOther) {
-      if ('hierarchyDefs' in hierarchyDefsOrOther) {
+      if ("hierarchyDefs" in hierarchyDefsOrOther) {
         // Copy constructor
         const other = hierarchyDefsOrOther as CatalogDef;
         for (const hDef of other.hierarchyDefs()) {
@@ -168,7 +165,7 @@ export class CatalogImpl extends LocalEntityOneCatalogImpl implements Catalog {
     globalIdOrSpecies?: string | CatalogSpecies,
     upstreamOrSpecies?: string | null | CatalogSpecies,
     upstream?: string | null,
-    version?: number
+    version?: number,
   ) {
     let globalId: string;
     let species: CatalogSpecies;
@@ -181,15 +178,15 @@ export class CatalogImpl extends LocalEntityOneCatalogImpl implements Catalog {
       species = CatalogSpecies.SINK;
       upstreamId = null;
       versionNum = 0;
-    } else if (typeof globalIdOrSpecies === 'string' && upstreamOrSpecies === undefined) {
+    } else if (typeof globalIdOrSpecies === "string" && upstreamOrSpecies === undefined) {
       // Constructor with globalId only
       globalId = globalIdOrSpecies;
       species = CatalogSpecies.SINK;
       upstreamId = null;
       versionNum = 0;
     } else if (
-      typeof globalIdOrSpecies === 'string' &&
-      typeof upstreamOrSpecies === 'string' &&
+      typeof globalIdOrSpecies === "string" &&
+      typeof upstreamOrSpecies === "string" &&
       upstream !== undefined &&
       version !== undefined
     ) {
@@ -199,8 +196,8 @@ export class CatalogImpl extends LocalEntityOneCatalogImpl implements Catalog {
       upstreamId = upstream;
       versionNum = version;
     } else if (
-      typeof globalIdOrSpecies === 'string' &&
-      typeof upstreamOrSpecies === 'object' &&
+      typeof globalIdOrSpecies === "string" &&
+      typeof upstreamOrSpecies === "object" &&
       upstream === undefined &&
       version === undefined
     ) {
@@ -210,13 +207,13 @@ export class CatalogImpl extends LocalEntityOneCatalogImpl implements Catalog {
       upstreamId = upstreamOrSpecies as string | null;
       versionNum = 0;
     } else {
-      throw new Error('Invalid constructor arguments');
+      throw new Error("Invalid constructor arguments");
     }
 
     // Validate upstream relationship
     if (species === CatalogSpecies.SOURCE || species === CatalogSpecies.SINK) {
       if (upstreamId !== null) {
-        throw new Error('Source and Sink catalogs may not have an upstream catalog.');
+        throw new Error("Source and Sink catalogs may not have an upstream catalog.");
       }
     } else {
       if (upstreamId === null) {
@@ -272,14 +269,14 @@ export class CatalogImpl extends LocalEntityOneCatalogImpl implements Catalog {
   addHierarchy(hierarchy: Hierarchy): Hierarchy | null {
     if (hierarchy.catalog() !== this) {
       throw new Error(
-        'Cannot add a Hierarchy to a Catalog unless the Catalog is already set as the Hierarchy\'s owner.'
+        "Cannot add a Hierarchy to a Catalog unless the Catalog is already set as the Hierarchy's owner.",
       );
     }
     const hName = hierarchy.name();
     const existing = this.hierarchy(hName);
     if (existing instanceof AspectMapHierarchyImpl) {
       throw new Error(
-        'A hierarchy may not be added to a Catalog with the same name as an existing AspectMapHierarchy.'
+        "A hierarchy may not be added to a Catalog with the same name as an existing AspectMapHierarchy.",
       );
     }
     if (hierarchy instanceof AspectMapHierarchyImpl) {
@@ -297,7 +294,7 @@ export class CatalogImpl extends LocalEntityOneCatalogImpl implements Catalog {
   }
 
   aspects(aspectDefOrName: AspectDef | string): AspectMapHierarchy | null {
-    const name = typeof aspectDefOrName === 'string' ? aspectDefOrName : aspectDefOrName.name();
+    const name = typeof aspectDefOrName === "string" ? aspectDefOrName : aspectDefOrName.name();
     const h = this.hierarchy(name);
     return h instanceof AspectMapHierarchyImpl ? h : null;
   }
@@ -311,7 +308,7 @@ export class CatalogImpl extends LocalEntityOneCatalogImpl implements Catalog {
     if (aMap !== null) {
       if (!aspectDef.fullyEquals(aMap.aspectDef())) {
         throw new Error(
-          'A catalog may not be extended with a new AspectDef that is not identical to an existing AspectDef with the same name.'
+          "A catalog may not be extended with a new AspectDef that is not identical to an existing AspectDef with the same name.",
         );
       }
       return aMap;

@@ -14,30 +14,30 @@ This is an **npm workspace** with multiple packages. TypeScript is configured wi
 
 ```bash
 # From workspace root (builds all packages)
-npm run build
+yarn run build
 
 # Build individual packages (recommended during development)
-cd packages/cheap-core && npm install && npm run build
-cd packages/cheap-json && npm install && npm run build
+cd packages/cheap-core && yarn install && yarn run build
+cd packages/cheap-json && yarn install && yarn run build
 
 # Clean build artifacts
-npm run clean
+yarn run clean
 ```
 
 ### Running Tests
 
 ```bash
 # From workspace root
-npm test
+yarn run test
 
 # Individual package
-cd packages/cheap-core && npm test
+cd packages/cheap-core && yarn run test
 ```
 
 ### Linting and Formatting
 
 ```bash
-npm run lint
+yarn run lint
 npm run format
 ```
 

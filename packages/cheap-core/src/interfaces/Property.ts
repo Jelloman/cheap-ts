@@ -2,7 +2,7 @@
  * Property interfaces
  */
 
-import { PropertyType } from '../types.js';
+import { PropertyType } from "../types.js";
 
 /**
  * Type alias for a constructor function

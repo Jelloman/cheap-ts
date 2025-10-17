@@ -8,8 +8,8 @@
  * Entities are analogous to primary keys in database terminology.
  */
 
-import { Aspect, AspectDef } from './Aspect.js';
-import { Catalog } from './Catalog.js';
+import { Aspect, AspectDef } from "./Aspect.js";
+import { Catalog } from "./Catalog.js";
 
 /**
  * Represents an entity in the Cheap data model. An Entity is only a conceptual object.

@@ -2,23 +2,16 @@
  * Tests to verify that hash caching is working correctly for PropertyDef and AspectDef implementations.
  */
 
-import { describe, it, expect } from '@jest/globals';
-import { PropertyDefBuilder } from './PropertyDefBuilder.js';
-import { PropertyType } from '../types.js';
-import {
-  ImmutableAspectDefImpl,
-  MutableAspectDefImpl,
-  FullAspectDefImpl,
-} from './AspectDefImpl.js';
-import { PropertyDef } from '../interfaces/index.js';
+import { describe, it, expect } from "@jest/globals";
+import { PropertyDefBuilder } from "./PropertyDefBuilder.js";
+import { PropertyType } from "../types.js";
+import { ImmutableAspectDefImpl, MutableAspectDefImpl, FullAspectDefImpl } from "./AspectDefImpl.js";
+import { PropertyDef } from "../interfaces/index.js";
 
-describe('HashCaching', () => {
-  describe('PropertyDefImpl', () => {
-    it('should cache hash value - multiple calls return same value', () => {
-      const propDef = new PropertyDefBuilder()
-        .setName('testProp')
-        .setType(PropertyType.String)
-        .build();
+describe("HashCaching", () => {
+  describe("PropertyDefImpl", () => {
+    it("should cache hash value - multiple calls return same value", () => {
+      const propDef = new PropertyDefBuilder().setName("testProp").setType(PropertyType.String).build();
 
       const hash1 = propDef.hash();
       const hash2 = propDef.hash();
@@ -30,20 +23,14 @@ describe('HashCaching', () => {
     });
   });
 
-  describe('ImmutableAspectDefImpl', () => {
-    it('should cache hash value - multiple calls return same value', () => {
+  describe("ImmutableAspectDefImpl", () => {
+    it("should cache hash value - multiple calls return same value", () => {
       const propertyDefs = new Map<string, PropertyDef>([
-        [
-          'prop1',
-          new PropertyDefBuilder().setName('prop1').setType(PropertyType.String).build(),
-        ],
-        [
-          'prop2',
-          new PropertyDefBuilder().setName('prop2').setType(PropertyType.Integer).build(),
-        ],
+        ["prop1", new PropertyDefBuilder().setName("prop1").setType(PropertyType.String).build()],
+        ["prop2", new PropertyDefBuilder().setName("prop2").setType(PropertyType.Integer).build()],
       ]);
 
-      const aspectDef = new ImmutableAspectDefImpl('testAspect', propertyDefs);
+      const aspectDef = new ImmutableAspectDefImpl("testAspect", propertyDefs);
 
       const hash1 = aspectDef.hash();
       const hash2 = aspectDef.hash();
@@ -55,23 +42,18 @@ describe('HashCaching', () => {
     });
   });
 
-  describe('MutableAspectDefImpl', () => {
-    it('should invalidate cache on add', () => {
+  describe("MutableAspectDefImpl", () => {
+    it("should invalidate cache on add", () => {
       const propertyDefs = new Map<string, PropertyDef>([
-        [
-          'prop1',
-          new PropertyDefBuilder().setName('prop1').setType(PropertyType.String).build(),
-        ],
+        ["prop1", new PropertyDefBuilder().setName("prop1").setType(PropertyType.String).build()],
       ]);
 
-      const aspectDef = new MutableAspectDefImpl('testAspect', crypto.randomUUID(), propertyDefs);
+      const aspectDef = new MutableAspectDefImpl("testAspect", crypto.randomUUID(), propertyDefs);
 
       const hashBeforeAdd = aspectDef.hash();
 
       // Add a property - should invalidate cache
-      aspectDef.add(
-        new PropertyDefBuilder().setName('prop2').setType(PropertyType.Integer).build()
-      );
+      aspectDef.add(new PropertyDefBuilder().setName("prop2").setType(PropertyType.Integer).build());
 
       const hashAfterAdd = aspectDef.hash();
 
@@ -80,18 +62,15 @@ describe('HashCaching', () => {
       expect(hashAfterAdd).not.toBe(0n);
     });
 
-    it('should invalidate cache on remove', () => {
-      const prop1 = new PropertyDefBuilder().setName('prop1').setType(PropertyType.String).build();
-      const prop2 = new PropertyDefBuilder()
-        .setName('prop2')
-        .setType(PropertyType.Integer)
-        .build();
+    it("should invalidate cache on remove", () => {
+      const prop1 = new PropertyDefBuilder().setName("prop1").setType(PropertyType.String).build();
+      const prop2 = new PropertyDefBuilder().setName("prop2").setType(PropertyType.Integer).build();
       const propertyDefs = new Map<string, PropertyDef>([
-        ['prop1', prop1],
-        ['prop2', prop2],
+        ["prop1", prop1],
+        ["prop2", prop2],
       ]);
 
-      const aspectDef = new MutableAspectDefImpl('testAspect', crypto.randomUUID(), propertyDefs);
+      const aspectDef = new MutableAspectDefImpl("testAspect", crypto.randomUUID(), propertyDefs);
 
       const hashBeforeRemove = aspectDef.hash();
 
@@ -105,16 +84,12 @@ describe('HashCaching', () => {
       expect(hashAfterRemove).not.toBe(0n);
     });
 
-    it('should cache hash value after multiple modifications', () => {
-      const aspectDef = new MutableAspectDefImpl('testAspect', crypto.randomUUID());
+    it("should cache hash value after multiple modifications", () => {
+      const aspectDef = new MutableAspectDefImpl("testAspect", crypto.randomUUID());
 
       // Add properties
-      aspectDef.add(
-        new PropertyDefBuilder().setName('prop1').setType(PropertyType.String).build()
-      );
-      aspectDef.add(
-        new PropertyDefBuilder().setName('prop2').setType(PropertyType.Integer).build()
-      );
+      aspectDef.add(new PropertyDefBuilder().setName("prop1").setType(PropertyType.String).build());
+      aspectDef.add(new PropertyDefBuilder().setName("prop2").setType(PropertyType.Integer).build());
 
       // Get hash (should be computed and cached)
       const hash1 = aspectDef.hash();
@@ -126,9 +101,7 @@ describe('HashCaching', () => {
       expect(hash3).toBe(hash1);
 
       // Modify again
-      aspectDef.add(
-        new PropertyDefBuilder().setName('prop3').setType(PropertyType.Boolean).build()
-      );
+      aspectDef.add(new PropertyDefBuilder().setName("prop3").setType(PropertyType.Boolean).build());
 
       const hash4 = aspectDef.hash();
       const hash5 = aspectDef.hash();
@@ -140,31 +113,26 @@ describe('HashCaching', () => {
     });
   });
 
-  describe('FullAspectDefImpl', () => {
-    it('should invalidate cache on add when allowed', () => {
+  describe("FullAspectDefImpl", () => {
+    it("should invalidate cache on add when allowed", () => {
       const propertyDefs = new Map<string, PropertyDef>([
-        [
-          'prop1',
-          new PropertyDefBuilder().setName('prop1').setType(PropertyType.String).build(),
-        ],
+        ["prop1", new PropertyDefBuilder().setName("prop1").setType(PropertyType.String).build()],
       ]);
 
       const aspectDef = new FullAspectDefImpl(
-        'testAspect',
+        "testAspect",
         crypto.randomUUID(),
         propertyDefs,
         true, // isReadable
         true, // isWritable
         true, // canAddProperties
-        false // canRemoveProperties
+        false, // canRemoveProperties
       );
 
       const hashBeforeAdd = aspectDef.hash();
 
       // Add a property - should invalidate cache
-      aspectDef.add(
-        new PropertyDefBuilder().setName('prop2').setType(PropertyType.Integer).build()
-      );
+      aspectDef.add(new PropertyDefBuilder().setName("prop2").setType(PropertyType.Integer).build());
 
       const hashAfterAdd = aspectDef.hash();
 
@@ -173,25 +141,22 @@ describe('HashCaching', () => {
       expect(hashAfterAdd).not.toBe(0n);
     });
 
-    it('should invalidate cache on remove when allowed', () => {
-      const prop1 = new PropertyDefBuilder().setName('prop1').setType(PropertyType.String).build();
-      const prop2 = new PropertyDefBuilder()
-        .setName('prop2')
-        .setType(PropertyType.Integer)
-        .build();
+    it("should invalidate cache on remove when allowed", () => {
+      const prop1 = new PropertyDefBuilder().setName("prop1").setType(PropertyType.String).build();
+      const prop2 = new PropertyDefBuilder().setName("prop2").setType(PropertyType.Integer).build();
       const propertyDefs = new Map<string, PropertyDef>([
-        ['prop1', prop1],
-        ['prop2', prop2],
+        ["prop1", prop1],
+        ["prop2", prop2],
       ]);
 
       const aspectDef = new FullAspectDefImpl(
-        'testAspect',
+        "testAspect",
         crypto.randomUUID(),
         propertyDefs,
         true, // isReadable
         true, // isWritable
         false, // canAddProperties
-        true // canRemoveProperties
+        true, // canRemoveProperties
       );
 
       const hashBeforeRemove = aspectDef.hash();
