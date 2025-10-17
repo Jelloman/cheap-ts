@@ -2,7 +2,7 @@
  * AspectDef implementation classes
  */
 
-import { AspectDef, MutableAspectDef, PropertyDef, Aspect } from '../interfaces/index.js';
+import { AspectDef, MutableAspectDef, PropertyDef, Aspect } from '../interfaces';
 import { CheapHasher } from '../util/CheapHasher.js';
 
 /**
@@ -43,12 +43,8 @@ export abstract class AspectDefBase implements AspectDef {
     return this._globalId;
   }
 
-  get id(): string {
-    return this._globalId;
-  }
-
   // Entity interface methods - AspectDef entities don't use these
-  getAspect(_def: AspectDef, _cat: any): Aspect | null {
+  getAspect(_def: AspectDef, _cat: never): Aspect | null {
     // AspectDef entities don't have aspects attached in the normal way
     return null;
   }
@@ -58,7 +54,7 @@ export abstract class AspectDefBase implements AspectDef {
     throw new Error('AspectDef entities do not support aspect attachment');
   }
 
-  attachAndSave(_aspect: Aspect, _catalog: any): void {
+  attachAndSave(_aspect: Aspect, _catalog: never): void {
     // AspectDef entities don't support aspect attachment
     throw new Error('AspectDef entities do not support aspect attachment and saving');
   }

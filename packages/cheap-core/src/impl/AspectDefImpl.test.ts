@@ -58,7 +58,7 @@ describe('MutableAspectDefImpl', () => {
 
     it('should throw for null property map', () => {
       expect(() => {
-        new MutableAspectDefImpl('testAspect', crypto.randomUUID(), null as any);
+        new MutableAspectDefImpl('testAspect', crypto.randomUUID(), null as never);
       }).toThrow();
     });
   });
@@ -105,7 +105,7 @@ describe('MutableAspectDefImpl', () => {
       const aspectDef = new MutableAspectDefImpl('testAspect', crypto.randomUUID());
 
       expect(() => {
-        aspectDef.add(null as any);
+        aspectDef.add(null as never);
       }).toThrow();
     });
   });
@@ -149,7 +149,7 @@ describe('MutableAspectDefImpl', () => {
       const aspectDef = new MutableAspectDefImpl('testAspect', crypto.randomUUID());
 
       expect(() => {
-        aspectDef.remove(null as any);
+        aspectDef.remove(null as never);
       }).toThrow();
     });
   });

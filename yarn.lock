@@ -556,7 +556,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@eslint/js@npm:9.37.0":
+"@eslint/js@npm:9.37.0, @eslint/js@npm:^9.37.0":
   version: 9.37.0
   resolution: "@eslint/js@npm:9.37.0"
   checksum: 10c0/84f98a6213522fc76ea104bd910f606136200bd918544e056a7a22442d3f9d5c3c5cd7f4cdf2499d49b1fa140155b87d597a1f16d01644920f05c228e9ca0378
@@ -1947,11 +1947,12 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "cheap-ts-workspace@workspace:."
   dependencies:
+    "@eslint/js": "npm:^9.37.0"
     "@types/node": "npm:^24.0.0"
     "@typescript-eslint/eslint-plugin": "npm:^8.0.0"
     "@typescript-eslint/parser": "npm:^8.0.0"
-    eslint: "npm:^9.0.0"
-    globals: "npm:^15.0.0"
+    eslint: "npm:^9.37.0"
+    globals: "npm:^16.4.0"
     jest: "npm:^30.0.0"
     jest-util: "npm:^30.0.0"
     jiti: "npm:^2.0.0"
@@ -1959,7 +1960,7 @@ __metadata:
     ts-jest: "npm:^29.4.5"
     ts-node: "npm:^10.9.2"
     typescript: "npm:^5.9.0"
-    typescript-eslint: "npm:^8.0.0"
+    typescript-eslint: "npm:^8.46.1"
   languageName: unknown
   linkType: soft
 
@@ -2267,7 +2268,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"eslint@npm:^9.0.0":
+"eslint@npm:^9.37.0":
   version: 9.37.0
   resolution: "eslint@npm:9.37.0"
   dependencies:
@@ -2690,10 +2691,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"globals@npm:^15.0.0":
-  version: 15.15.0
-  resolution: "globals@npm:15.15.0"
-  checksum: 10c0/f9ae80996392ca71316495a39bec88ac43ae3525a438b5626cd9d5ce9d5500d0a98a266409605f8cd7241c7acf57c354a48111ea02a767ba4f374b806d6861fe
+"globals@npm:^16.4.0":
+  version: 16.4.0
+  resolution: "globals@npm:16.4.0"
+  checksum: 10c0/a14b447a78b664b42f6d324e8675fcae6fe5e57924fecc1f6328dce08af9b2ca3a3138501e1b1f244a49814a732dc60cfc1aa24e714e0b64ac8bd18910bfac90
   languageName: node
   linkType: hard
 
@@ -4875,7 +4876,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"typescript-eslint@npm:^8.0.0":
+"typescript-eslint@npm:^8.46.1":
   version: 8.46.1
   resolution: "typescript-eslint@npm:8.46.1"
   dependencies:

@@ -93,7 +93,6 @@ dist
 
 # vuepress v2.x temp and cache directory
 .temp
-.cache
 
 # Sveltekit cache directory
 .svelte-kit/
@@ -121,6 +120,9 @@ dist
 
 # TernJS port file
 .tern-port
+
+# IDEA
+.idea
 
 # Stores VSCode versions used for testing VSCode extensions
 .vscode-test
