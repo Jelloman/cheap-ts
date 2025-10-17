@@ -2,9 +2,9 @@
  * Property implementation stubs
  */
 
-import { Property, PropertyDef, Constructor } from '../interfaces/index.js';
-import { PropertyType } from '../types.js';
-import { CheapHasher } from '../util/CheapHasher.js';
+import { Property, PropertyDef, Constructor } from "../interfaces/index.js";
+import { PropertyType } from "../types.js";
+import { CheapHasher } from "../util/CheapHasher.js";
 
 export class PropertyDefImpl implements PropertyDef {
   private _cachedHash: bigint = 0n;
@@ -18,7 +18,7 @@ export class PropertyDefImpl implements PropertyDef {
     private readonly _isWritable: boolean = true,
     private readonly _isNullable: boolean = false,
     private readonly _isRemovable: boolean = false,
-    private readonly _isMultivalued: boolean = false
+    private readonly _isMultivalued: boolean = false,
   ) {}
 
   name(): string {
@@ -86,13 +86,13 @@ export class PropertyDefImpl implements PropertyDef {
       if (this._hasDefaultValue && this._defaultValue !== null) {
         // Hash based on the type of the default value
         const defaultVal = this._defaultValue;
-        if (typeof defaultVal === 'string') {
+        if (typeof defaultVal === "string") {
           hasher.updateString(defaultVal);
-        } else if (typeof defaultVal === 'number') {
+        } else if (typeof defaultVal === "number") {
           hasher.updateNumber(defaultVal);
-        } else if (typeof defaultVal === 'boolean') {
+        } else if (typeof defaultVal === "boolean") {
           hasher.updateBoolean(defaultVal);
-        } else if (typeof defaultVal === 'bigint') {
+        } else if (typeof defaultVal === "bigint") {
           hasher.updateBigInt(defaultVal);
         } else if (defaultVal instanceof Date) {
           hasher.updateDate(defaultVal);
@@ -138,9 +138,7 @@ export class PropertyDefImpl implements PropertyDef {
         // For multivalued properties, expect an Array
         if (!Array.isArray(value)) {
           if (throwExceptions) {
-            throw new Error(
-              `Property '${this.name()}' is multivalued and expects an Array but got ${typeof value}`
-            );
+            throw new Error(`Property '${this.name()}' is multivalued and expects an Array but got ${typeof value}`);
           }
           return false;
         }
@@ -153,13 +151,13 @@ export class PropertyDefImpl implements PropertyDef {
           if (element != null) {
             let isValid = false;
             if (expectedJsType === Number) {
-              isValid = typeof element === 'number';
+              isValid = typeof element === "number";
             } else if (expectedJsType === String) {
-              isValid = typeof element === 'string';
+              isValid = typeof element === "string";
             } else if (expectedJsType === Boolean) {
-              isValid = typeof element === 'boolean';
+              isValid = typeof element === "boolean";
             } else if (expectedJsType === BigInt) {
-              isValid = typeof element === 'bigint';
+              isValid = typeof element === "bigint";
             } else {
               // For object types (Date, URL, Uint8Array, etc.), use instanceof
               isValid = element instanceof expectedJsType;
@@ -168,7 +166,7 @@ export class PropertyDefImpl implements PropertyDef {
             if (!isValid) {
               if (throwExceptions) {
                 throw new Error(
-                  `Property '${this.name()}' expects Array<${expectedJsType.name}> but the first element is ${typeof element}`
+                  `Property '${this.name()}' expects Array<${expectedJsType.name}> but the first element is ${typeof element}`,
                 );
               }
               return false;
@@ -180,13 +178,13 @@ export class PropertyDefImpl implements PropertyDef {
         // Check primitive types with typeof, objects with instanceof
         let isValid = false;
         if (expectedJsType === Number) {
-          isValid = typeof value === 'number';
+          isValid = typeof value === "number";
         } else if (expectedJsType === String) {
-          isValid = typeof value === 'string';
+          isValid = typeof value === "string";
         } else if (expectedJsType === Boolean) {
-          isValid = typeof value === 'boolean';
+          isValid = typeof value === "boolean";
         } else if (expectedJsType === BigInt) {
-          isValid = typeof value === 'bigint';
+          isValid = typeof value === "bigint";
         } else {
           // For object types (Date, URL, Uint8Array, etc.), use instanceof
           isValid = value instanceof expectedJsType;
@@ -194,9 +192,7 @@ export class PropertyDefImpl implements PropertyDef {
 
         if (!isValid) {
           if (throwExceptions) {
-            throw new Error(
-              `Property '${this.name()}' expects type ${expectedJsType.name} but got ${typeof value}`
-            );
+            throw new Error(`Property '${this.name()}' expects type ${expectedJsType.name} but got ${typeof value}`);
           }
           return false;
         }
@@ -209,7 +205,7 @@ export class PropertyDefImpl implements PropertyDef {
 export class PropertyImpl implements Property {
   constructor(
     private readonly _def: PropertyDef,
-    private readonly _value: unknown
+    private readonly _value: unknown,
   ) {}
 
   def(): PropertyDef {
@@ -244,9 +240,7 @@ export class PropertyImpl implements Property {
       return value as T;
     }
     if (!(value instanceof type)) {
-      throw new Error(
-        `Property '${name}' of type '${typeof value}' cannot be assigned to type '${type.name}'.`
-      );
+      throw new Error(`Property '${name}' of type '${typeof value}' cannot be assigned to type '${type.name}'.`);
     }
     return value as T;
   }

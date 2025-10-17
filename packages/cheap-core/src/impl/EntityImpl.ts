@@ -2,10 +2,10 @@
  * Entity implementation classes
  */
 
-import { Entity, LocalEntity } from '../interfaces/Entity.js';
-import { Aspect, AspectDef } from '../interfaces/Aspect.js';
-import { Catalog } from '../interfaces/Catalog.js';
-import { randomUUID } from 'crypto';
+import { Entity, LocalEntity } from "../interfaces/Entity.js";
+import { Aspect, AspectDef } from "../interfaces/Aspect.js";
+import { Catalog } from "../interfaces/Catalog.js";
+import { randomUUID } from "crypto";
 
 /**
  * Basic implementation of an Entity reference with the bare minimum functionality
@@ -30,7 +30,7 @@ export class EntityImpl implements Entity {
       this._globalId = randomUUID();
     } else {
       if (!globalId) {
-        throw new Error('EntityImpl may not have a null or empty UUID.');
+        throw new Error("EntityImpl may not have a null or empty UUID.");
       }
       this._globalId = globalId;
     }
@@ -88,9 +88,7 @@ export class EntityImpl implements Entity {
     this.attach(aspect);
     const aspectMap = catalog.aspects(aspect.def());
     if (aspectMap === null) {
-      throw new Error(
-        `Aspects of type '${aspect.def().name()}' cannot be stored in the given catalog.`
-      );
+      throw new Error(`Aspects of type '${aspect.def().name()}' cannot be stored in the given catalog.`);
     }
     aspectMap.add(aspect);
   }
@@ -102,10 +100,10 @@ export class EntityImpl implements Entity {
    * @returns true if o is an Entity and has the same globalId
    */
   equals(o: unknown): boolean {
-    if (typeof o !== 'object' || o === null) {
+    if (typeof o !== "object" || o === null) {
       return false;
     }
-    if (!('globalId' in o) || typeof (o as Entity).globalId !== 'function') {
+    if (!("globalId" in o) || typeof (o as Entity).globalId !== "function") {
       return false;
     }
     return this._globalId === (o as Entity).globalId();
@@ -197,9 +195,7 @@ export class EntityLazyIdImpl implements Entity {
     this.attach(aspect);
     const aspectMap = catalog.aspects(aspect.def());
     if (aspectMap === null) {
-      throw new Error(
-        `Aspects of type '${aspect.def().name()}' cannot be stored in the given catalog.`
-      );
+      throw new Error(`Aspects of type '${aspect.def().name()}' cannot be stored in the given catalog.`);
     }
     aspectMap.add(aspect);
   }
@@ -212,10 +208,10 @@ export class EntityLazyIdImpl implements Entity {
    * @returns true if o is an Entity and has the same globalId
    */
   equals(o: unknown): boolean {
-    if (typeof o !== 'object' || o === null) {
+    if (typeof o !== "object" || o === null) {
       return false;
     }
-    if (!('globalId' in o) || typeof (o as Entity).globalId !== 'function') {
+    if (!("globalId" in o) || typeof (o as Entity).globalId !== "function") {
       return false;
     }
     return this.globalId() === (o as Entity).globalId();
@@ -259,7 +255,7 @@ export class LocalEntityOneCatalogImpl extends EntityImpl implements LocalEntity
    */
   constructor(globalId: string, catalog: Catalog);
   constructor(catalogOrGlobalId: Catalog | string, catalog?: Catalog) {
-    if (typeof catalogOrGlobalId === 'string') {
+    if (typeof catalogOrGlobalId === "string") {
       super(catalogOrGlobalId);
       this._catalog = catalog!;
     } else {
@@ -294,14 +290,8 @@ export class LocalEntityOneCatalogImpl extends EntityImpl implements LocalEntity
    * Adds an aspect to this entity.
    */
   add(aspect: Aspect): void {
-    if (
-      aspect.entity() !== null &&
-      aspect.entity() !== this &&
-      !aspect.isTransferable()
-    ) {
-      throw new Error(
-        'An Aspect flagged as non-transferable may not be reassigned to a different entity.'
-      );
+    if (aspect.entity() !== null && aspect.entity() !== this && !aspect.isTransferable()) {
+      throw new Error("An Aspect flagged as non-transferable may not be reassigned to a different entity.");
     }
 
     const aspectMap = this._catalog.aspects(aspect.def());
@@ -311,9 +301,7 @@ export class LocalEntityOneCatalogImpl extends EntityImpl implements LocalEntity
       return;
     }
 
-    throw new Error(
-      `No Catalog was found to store the ${aspect.def().name()} aspect in.`
-    );
+    throw new Error(`No Catalog was found to store the ${aspect.def().name()} aspect in.`);
   }
 }
 
@@ -337,10 +325,10 @@ export class LocalEntityMultiCatalogImpl extends EntityImpl implements LocalEnti
    */
   constructor(globalId: string, catalog: Catalog);
   constructor(catalogOrGlobalId: Catalog | string, catalog?: Catalog) {
-    if (typeof catalogOrGlobalId === 'string') {
+    if (typeof catalogOrGlobalId === "string") {
       super(catalogOrGlobalId);
       if (!catalog) {
-        throw new Error('Catalog may not be null in LocalEntityMultiCatalogImpl.');
+        throw new Error("Catalog may not be null in LocalEntityMultiCatalogImpl.");
       }
       this._catalogs = new Set([catalog]);
     } else {
@@ -380,14 +368,8 @@ export class LocalEntityMultiCatalogImpl extends EntityImpl implements LocalEnti
    * Adds an aspect to this entity.
    */
   add(aspect: Aspect): void {
-    if (
-      aspect.entity() !== null &&
-      aspect.entity() !== this &&
-      !aspect.isTransferable()
-    ) {
-      throw new Error(
-        'An Aspect flagged as non-transferable may not be reassigned to a different entity.'
-      );
+    if (aspect.entity() !== null && aspect.entity() !== this && !aspect.isTransferable()) {
+      throw new Error("An Aspect flagged as non-transferable may not be reassigned to a different entity.");
     }
 
     for (const catalog of this._catalogs) {
@@ -399,9 +381,7 @@ export class LocalEntityMultiCatalogImpl extends EntityImpl implements LocalEnti
       }
     }
 
-    throw new Error(
-      `No Catalog was found to store the ${aspect.def().name()} aspect in.`
-    );
+    throw new Error(`No Catalog was found to store the ${aspect.def().name()} aspect in.`);
   }
 
   /**
@@ -438,7 +418,7 @@ export class CachingEntityOneCatalogImpl extends LocalEntityOneCatalogImpl {
    */
   constructor(globalId: string, catalog: Catalog);
   constructor(catalogOrGlobalId: Catalog | string, catalog?: Catalog) {
-    if (typeof catalogOrGlobalId === 'string') {
+    if (typeof catalogOrGlobalId === "string") {
       super(catalogOrGlobalId, catalog!);
     } else {
       super(catalogOrGlobalId);
@@ -523,7 +503,7 @@ export class CachingEntityMultiCatalogImpl extends LocalEntityMultiCatalogImpl {
    */
   constructor(globalId: string, catalog: Catalog);
   constructor(catalogOrGlobalId: Catalog | string, catalog?: Catalog) {
-    if (typeof catalogOrGlobalId === 'string') {
+    if (typeof catalogOrGlobalId === "string") {
       super(catalogOrGlobalId, catalog!);
     } else {
       super(catalogOrGlobalId);

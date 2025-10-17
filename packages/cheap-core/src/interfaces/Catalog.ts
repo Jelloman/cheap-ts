@@ -2,10 +2,10 @@
  * Catalog interfaces
  */
 
-import { Entity } from './Entity.js';
-import { Hierarchy, AspectMapHierarchy, HierarchyDef } from './Hierarchy.js';
-import { AspectDef } from './Aspect.js';
-import { CatalogSpecies } from '../types.js';
+import { Entity } from "./Entity.js";
+import { Hierarchy, AspectMapHierarchy, HierarchyDef } from "./Hierarchy.js";
+import { AspectDef } from "./Aspect.js";
+import { CatalogSpecies } from "../types.js";
 
 /**
  * A CatalogDef defines the structure and properties of a catalog.

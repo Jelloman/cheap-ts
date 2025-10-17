@@ -2,9 +2,9 @@
  * PropertyDefBuilder implementation
  */
 
-import { PropertyDef } from '../interfaces/index.js';
-import { PropertyType } from '../types.js';
-import { PropertyDefImpl } from './PropertyImpl.js';
+import { PropertyDef } from "../interfaces/index.js";
+import { PropertyType } from "../types.js";
+import { PropertyDefImpl } from "./PropertyImpl.js";
 
 /**
  * Builder class for creating PropertyDef instances using the builder pattern.
@@ -105,10 +105,10 @@ export class PropertyDefBuilder {
    */
   build(): PropertyDef {
     if (!this._name) {
-      throw new Error('Property name must be set before building');
+      throw new Error("Property name must be set before building");
     }
     if (!this._type) {
-      throw new Error('Property type must be set before building');
+      throw new Error("Property type must be set before building");
     }
 
     return new PropertyDefImpl(
@@ -120,7 +120,7 @@ export class PropertyDefBuilder {
       this._isWritable,
       this._isNullable,
       this._isRemovable,
-      this._isMultivalued
+      this._isMultivalued,
     );
   }
 

@@ -14,19 +14,16 @@
  *  limitations under the License.
  */
 
-import { PropertyDef } from '../interfaces/Property.js';
-import { AspectDef, Aspect, AspectBuilder } from '../interfaces/Aspect.js';
-import { Entity } from '../interfaces/Entity.js';
-import { PropertyType, LocalEntityType } from '../types.js';
-import { PropertyDefImpl, PropertyImpl } from '../impl/PropertyImpl.js';
-import { MutableAspectDefImpl, ImmutableAspectDefImpl } from '../impl/AspectDefImpl.js';
-import { EntityImpl } from '../impl/EntityImpl.js';
-import { PropertyValueAdapter } from './PropertyValueAdapter.js';
-import {
-  AspectObjectMapImpl,
-  AspectPropertyMapImpl,
-} from '../impl/AspectImpl.js';
-import { AspectObjectMapBuilder } from '../impl/AspectBuilderImpl.js';
+import { PropertyDef } from "../interfaces/Property.js";
+import { AspectDef, Aspect, AspectBuilder } from "../interfaces/Aspect.js";
+import { Entity } from "../interfaces/Entity.js";
+import { PropertyType, LocalEntityType } from "../types.js";
+import { PropertyDefImpl, PropertyImpl } from "../impl/PropertyImpl.js";
+import { MutableAspectDefImpl, ImmutableAspectDefImpl } from "../impl/AspectDefImpl.js";
+import { EntityImpl } from "../impl/EntityImpl.js";
+import { PropertyValueAdapter } from "./PropertyValueAdapter.js";
+import { AspectObjectMapImpl, AspectPropertyMapImpl } from "../impl/AspectImpl.js";
+import { AspectObjectMapBuilder } from "../impl/AspectBuilderImpl.js";
 
 /**
  * Factory class providing instance-based factory methods for creating instances of all
@@ -65,15 +62,9 @@ export class CheapFactory {
    * @param defaultLocalEntityType the default type of LocalEntity to create
    * @param aspectBuilderClass the default AspectBuilder class to use
    */
-  constructor(
-    defaultLocalEntityType?: LocalEntityType | null,
-    aspectBuilderClass?: (new () => AspectBuilder) | null
-  );
+  constructor(defaultLocalEntityType?: LocalEntityType | null, aspectBuilderClass?: (new () => AspectBuilder) | null);
 
-  constructor(
-    defaultLocalEntityType?: LocalEntityType | null,
-    aspectBuilderClass?: (new () => AspectBuilder) | null
-  ) {
+  constructor(defaultLocalEntityType?: LocalEntityType | null, aspectBuilderClass?: (new () => AspectBuilder) | null) {
     this.defaultLocalEntityType = defaultLocalEntityType ?? LocalEntityType.SINGLE_CATALOG;
     this.aspectBuilderClass = aspectBuilderClass ?? AspectObjectMapBuilder;
     this.timeZone = Intl.DateTimeFormat().resolvedOptions().timeZone;
@@ -246,21 +237,17 @@ export class CheapFactory {
    * @param propertyDefs the map of property names to property definitions
    * @returns a new mutable AspectDef instance
    */
-  createMutableAspectDef(
-    name: string,
-    aspectDefId: string,
-    propertyDefs: Map<string, PropertyDef>
-  ): AspectDef;
+  createMutableAspectDef(name: string, aspectDefId: string, propertyDefs: Map<string, PropertyDef>): AspectDef;
 
   createMutableAspectDef(
     name: string,
     aspectDefIdOrPropertyDefs?: string | Map<string, PropertyDef>,
-    propertyDefs?: Map<string, PropertyDef>
+    propertyDefs?: Map<string, PropertyDef>,
   ): AspectDef {
     if (aspectDefIdOrPropertyDefs === undefined) {
       // Single parameter: name only
       return new MutableAspectDefImpl(name, crypto.randomUUID(), undefined);
-    } else if (typeof aspectDefIdOrPropertyDefs === 'string') {
+    } else if (typeof aspectDefIdOrPropertyDefs === "string") {
       // Three parameters: name, aspectDefId, propertyDefs
       return new MutableAspectDefImpl(name, aspectDefIdOrPropertyDefs, propertyDefs);
     } else {
@@ -286,18 +273,14 @@ export class CheapFactory {
    * @param propertyDefs the map of property names to property definitions
    * @returns a new immutable AspectDef instance
    */
-  createImmutableAspectDef(
-    name: string,
-    aspectDefId: string,
-    propertyDefs: Map<string, PropertyDef>
-  ): AspectDef;
+  createImmutableAspectDef(name: string, aspectDefId: string, propertyDefs: Map<string, PropertyDef>): AspectDef;
 
   createImmutableAspectDef(
     name: string,
     aspectDefIdOrPropertyDefs: string | Map<string, PropertyDef>,
-    propertyDefs?: Map<string, PropertyDef>
+    propertyDefs?: Map<string, PropertyDef>,
   ): AspectDef {
-    if (typeof aspectDefIdOrPropertyDefs === 'string') {
+    if (typeof aspectDefIdOrPropertyDefs === "string") {
       // Three parameters: name, aspectDefId, propertyDefs
       return new ImmutableAspectDefImpl(name, aspectDefIdOrPropertyDefs, propertyDefs!);
     } else {
@@ -361,7 +344,7 @@ export class CheapFactory {
     isWritable: boolean,
     isNullable: boolean,
     isRemovable: boolean,
-    isMultivalued: boolean
+    isMultivalued: boolean,
   ): PropertyDef;
 
   createPropertyDef(
@@ -373,7 +356,7 @@ export class CheapFactory {
     isWritable?: boolean,
     isNullable?: boolean,
     isRemovable?: boolean,
-    isMultivalued?: boolean
+    isMultivalued?: boolean,
   ): PropertyDef {
     if (defaultValue === undefined) {
       // Simple overload: just name and type
@@ -390,7 +373,7 @@ export class CheapFactory {
       isWritable ?? true,
       isNullable ?? false,
       isRemovable ?? false,
-      isMultivalued ?? false
+      isMultivalued ?? false,
     );
   }
 
@@ -403,12 +386,7 @@ export class CheapFactory {
    * @param isRemovable whether the property can be removed
    * @returns a new read-only PropertyDef instance
    */
-  createReadOnlyPropertyDef(
-    name: string,
-    type: PropertyType,
-    isNullable: boolean,
-    isRemovable: boolean
-  ): PropertyDef {
+  createReadOnlyPropertyDef(name: string, type: PropertyType, isNullable: boolean, isRemovable: boolean): PropertyDef {
     return new PropertyDefImpl(
       name,
       type,
@@ -418,7 +396,7 @@ export class CheapFactory {
       false, // isWritable
       isNullable,
       isRemovable,
-      false // isMultivalued
+      false, // isMultivalued
     );
   }
 

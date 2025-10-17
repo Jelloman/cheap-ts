@@ -2,8 +2,8 @@
  * AspectDef implementation classes
  */
 
-import { AspectDef, MutableAspectDef, PropertyDef, Aspect } from '../interfaces';
-import { CheapHasher } from '../util/CheapHasher.js';
+import { AspectDef, MutableAspectDef, PropertyDef, Aspect } from "../interfaces";
+import { CheapHasher } from "../util/CheapHasher.js";
 
 /**
  * Abstract base class for AspectDef implementations providing common functionality.
@@ -19,16 +19,12 @@ export abstract class AspectDefBase implements AspectDef {
   /**
    * Creates a new AspectDefBase with the specified name and property definitions.
    */
-  protected constructor(
-    name: string,
-    globalId: string,
-    propertyDefs: Map<string, PropertyDef>
-  ) {
+  protected constructor(name: string, globalId: string, propertyDefs: Map<string, PropertyDef>) {
     if (!name) {
-      throw new Error('AspectDefs must have a non-null name.');
+      throw new Error("AspectDefs must have a non-null name.");
     }
     if (!propertyDefs) {
-      throw new Error('Provided property defs cannot be null.');
+      throw new Error("Provided property defs cannot be null.");
     }
     this._name = name;
     this._globalId = globalId;
@@ -51,12 +47,12 @@ export abstract class AspectDefBase implements AspectDef {
 
   attach(_aspect: Aspect): void {
     // AspectDef entities don't support aspect attachment
-    throw new Error('AspectDef entities do not support aspect attachment');
+    throw new Error("AspectDef entities do not support aspect attachment");
   }
 
   attachAndSave(_aspect: Aspect, _catalog: never): void {
     // AspectDef entities don't support aspect attachment
-    throw new Error('AspectDef entities do not support aspect attachment and saving');
+    throw new Error("AspectDef entities do not support aspect attachment and saving");
   }
 
   propertyDefs(): ReadonlyArray<PropertyDef> {
@@ -149,7 +145,7 @@ export class ImmutableAspectDefImpl extends AspectDefBase {
   constructor(
     name: string,
     globalIdOrPropertyDefs?: string | Map<string, PropertyDef>,
-    propertyDefsOrUndefined?: Map<string, PropertyDef>
+    propertyDefsOrUndefined?: Map<string, PropertyDef>,
   ) {
     // Support both 2-parameter and 3-parameter constructors
     // 2-parameter: (name, propertyDefs) - generate UUID
@@ -157,7 +153,7 @@ export class ImmutableAspectDefImpl extends AspectDefBase {
     let actualGlobalId: string;
     let actualPropertyDefs: Map<string, PropertyDef>;
 
-    if (typeof globalIdOrPropertyDefs === 'string') {
+    if (typeof globalIdOrPropertyDefs === "string") {
       // 3-parameter form
       actualGlobalId = globalIdOrPropertyDefs;
       actualPropertyDefs = propertyDefsOrUndefined!;
@@ -171,7 +167,7 @@ export class ImmutableAspectDefImpl extends AspectDefBase {
     super(name, actualGlobalId, new Map(actualPropertyDefs));
 
     if (actualPropertyDefs.size === 0) {
-      throw new Error('An AspectDef must contain at least one property.');
+      throw new Error("An AspectDef must contain at least one property.");
     }
   }
 
@@ -194,9 +190,7 @@ export class ImmutableAspectDefImpl extends AspectDefBase {
    * Attempting to remove a property from an immutable AspectDef throws an error.
    */
   remove(_prop: PropertyDef): PropertyDef | null {
-    throw new Error(
-      `Properties cannot be removed from immutable AspectDef '${this._name}'.`
-    );
+    throw new Error(`Properties cannot be removed from immutable AspectDef '${this._name}'.`);
   }
 }
 
@@ -259,7 +253,7 @@ export class FullAspectDefImpl extends AspectDefBase implements MutableAspectDef
     isReadable: boolean,
     isWritable: boolean,
     canAddProperties: boolean,
-    canRemoveProperties: boolean
+    canRemoveProperties: boolean,
   ) {
     super(name, globalId, propertyDefs);
     this._isReadable = isReadable;
@@ -290,9 +284,7 @@ export class FullAspectDefImpl extends AspectDefBase implements MutableAspectDef
    */
   add(prop: PropertyDef): PropertyDef | null {
     if (!this._canAddProperties) {
-      throw new Error(
-        `Cannot add properties to AspectDef '${this._name}' (canAddProperties=false).`
-      );
+      throw new Error(`Cannot add properties to AspectDef '${this._name}' (canAddProperties=false).`);
     }
     this.invalidateHashCache();
     const previous = this._propertyDefs.get(prop.name()) ?? null;
@@ -306,9 +298,7 @@ export class FullAspectDefImpl extends AspectDefBase implements MutableAspectDef
    */
   remove(prop: PropertyDef): PropertyDef | null {
     if (!this._canRemoveProperties) {
-      throw new Error(
-        `Cannot remove properties from AspectDef '${this._name}' (canRemoveProperties=false).`
-      );
+      throw new Error(`Cannot remove properties from AspectDef '${this._name}' (canRemoveProperties=false).`);
     }
     this.invalidateHashCache();
     const removed = this._propertyDefs.get(prop.name()) ?? null;

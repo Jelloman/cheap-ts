@@ -9,11 +9,11 @@ import {
   EntityTreeHierarchy,
   EntityTreeNode,
   AspectMapHierarchy,
-} from '../interfaces/Hierarchy.js';
-import { Entity } from '../interfaces/Entity.js';
-import { Aspect, AspectDef } from '../interfaces/Aspect.js';
-import { Catalog } from '../interfaces/Catalog.js';
-import { HierarchyType } from '../types.js';
+} from "../interfaces/Hierarchy.js";
+import { Entity } from "../interfaces/Entity.js";
+import { Aspect, AspectDef } from "../interfaces/Aspect.js";
+import { Catalog } from "../interfaces/Catalog.js";
+import { HierarchyType } from "../types.js";
 
 /**
  * Basic implementation of an EntityListHierarchy using an Array.
@@ -64,22 +64,14 @@ export class EntityListHierarchyImpl extends Array<Entity> implements EntityList
    * @param version the version number of this hierarchy
    */
   constructor(catalog: Catalog, name: string, initialCapacity: number, version: number);
-  constructor(
-    catalog: Catalog,
-    name: string,
-    capacityOrVersion?: number,
-    version?: number
-  ) {
+  constructor(catalog: Catalog, name: string, capacityOrVersion?: number, version?: number) {
     if (version !== undefined) {
       // 4-arg constructor: catalog, name, initialCapacity, version
       super(capacityOrVersion!);
       this._catalog = catalog;
       this._name = name;
       this._version = version;
-    } else if (
-      capacityOrVersion !== undefined &&
-      (capacityOrVersion > 1000 || capacityOrVersion === 0)
-    ) {
+    } else if (capacityOrVersion !== undefined && (capacityOrVersion > 1000 || capacityOrVersion === 0)) {
       // 3-arg constructor with capacity: catalog, name, initialCapacity
       super(capacityOrVersion!);
       this._catalog = catalog;
@@ -178,19 +170,9 @@ export class EntitySetHierarchyImpl extends Set<Entity> implements EntitySetHier
    * @param initialEntities initial entities to add
    * @param version the version number of this hierarchy
    */
-  constructor(
-    catalog: Catalog,
-    name: string,
-    initialEntities: Iterable<Entity>,
-    version: number
-  );
-  constructor(
-    catalog: Catalog,
-    name: string,
-    versionOrEntities?: number | Iterable<Entity>,
-    version?: number
-  ) {
-    if (versionOrEntities !== undefined && typeof versionOrEntities === 'object') {
+  constructor(catalog: Catalog, name: string, initialEntities: Iterable<Entity>, version: number);
+  constructor(catalog: Catalog, name: string, versionOrEntities?: number | Iterable<Entity>, version?: number) {
+    if (versionOrEntities !== undefined && typeof versionOrEntities === "object") {
       // Iterable of entities provided
       super(versionOrEntities);
       this._catalog = catalog;
@@ -240,10 +222,7 @@ export class EntitySetHierarchyImpl extends Set<Entity> implements EntitySetHier
  * This hierarchy type represents a string-to-entity mapping, corresponding
  * to the ENTITY_DIR (ED) hierarchy type in Cheap.
  */
-export class EntityDirectoryHierarchyImpl
-  extends Map<string, Entity>
-  implements EntityDirectoryHierarchy
-{
+export class EntityDirectoryHierarchyImpl extends Map<string, Entity> implements EntityDirectoryHierarchy {
   /** The catalog containing this hierarchy. */
   private readonly _catalog: Catalog;
 
@@ -276,11 +255,7 @@ export class EntityDirectoryHierarchyImpl
    * @param name the name of this hierarchy in the catalog
    * @param initialEntries initial string-entity mappings
    */
-  constructor(
-    catalog: Catalog,
-    name: string,
-    initialEntries: Iterable<readonly [string, Entity]>
-  );
+  constructor(catalog: Catalog, name: string, initialEntries: Iterable<readonly [string, Entity]>);
   /**
    * Creates a new EntityDirectoryHierarchyImpl with the specified hierarchy definition,
    * initial entries, and version.
@@ -290,19 +265,14 @@ export class EntityDirectoryHierarchyImpl
    * @param initialEntries initial string-entity mappings
    * @param version the version number of this hierarchy
    */
-  constructor(
-    catalog: Catalog,
-    name: string,
-    initialEntries: Iterable<readonly [string, Entity]>,
-    version: number
-  );
+  constructor(catalog: Catalog, name: string, initialEntries: Iterable<readonly [string, Entity]>, version: number);
   constructor(
     catalog: Catalog,
     name: string,
     versionOrEntries?: number | Iterable<readonly [string, Entity]>,
-    version?: number
+    version?: number,
   ) {
-    if (versionOrEntries !== undefined && typeof versionOrEntries === 'object') {
+    if (versionOrEntries !== undefined && typeof versionOrEntries === "object") {
       // Iterable of entries provided
       super(versionOrEntries);
       this._catalog = catalog;
@@ -469,7 +439,7 @@ export class EntityTreeLeafNodeImpl implements EntityTreeNode {
   }
   forEach(
     _callbackfn: (value: EntityTreeNode, key: string, map: Map<string, EntityTreeNode>) => void,
-    _thisArg?: unknown
+    _thisArg?: unknown,
   ): void {}
   get(_key: string): EntityTreeNode | undefined {
     return undefined;
@@ -478,7 +448,7 @@ export class EntityTreeLeafNodeImpl implements EntityTreeNode {
     return false;
   }
   set(_key: string, _value: EntityTreeNode): this {
-    throw new Error('Cannot add children to a leaf node');
+    throw new Error("Cannot add children to a leaf node");
   }
   get size(): number {
     return 0;
@@ -495,7 +465,7 @@ export class EntityTreeLeafNodeImpl implements EntityTreeNode {
   [Symbol.iterator](): MapIterator<[string, EntityTreeNode]> {
     return new Map<string, EntityTreeNode>().entries();
   }
-  [Symbol.toStringTag] = 'EntityTreeLeafNode';
+  [Symbol.toStringTag] = "EntityTreeLeafNode";
 }
 
 /**
@@ -551,23 +521,14 @@ export class EntityTreeHierarchyImpl implements EntityTreeHierarchy {
    * @param version the version number of this hierarchy
    */
   constructor(catalog: Catalog, name: string, rootNode: EntityTreeNode, version: number);
-  constructor(
-    catalog: Catalog,
-    name: string,
-    rootEntityOrNode?: Entity | null | EntityTreeNode,
-    version?: number
-  ) {
+  constructor(catalog: Catalog, name: string, rootEntityOrNode?: Entity | null | EntityTreeNode, version?: number) {
     this._catalog = catalog;
     this._name = name;
     this._version = version ?? 0;
 
     if (rootEntityOrNode === undefined) {
       this._root = new EntityTreeNodeImpl(null);
-    } else if (
-      rootEntityOrNode !== null &&
-      typeof rootEntityOrNode === 'object' &&
-      'isLeaf' in rootEntityOrNode
-    ) {
+    } else if (rootEntityOrNode !== null && typeof rootEntityOrNode === "object" && "isLeaf" in rootEntityOrNode) {
       this._root = rootEntityOrNode;
     } else {
       this._root = new EntityTreeNodeImpl(rootEntityOrNode);
@@ -625,10 +586,7 @@ export class EntityTreeHierarchyImpl implements EntityTreeHierarchy {
  * Basic implementation of an AspectMapHierarchy that maps entities to aspects.
  * This hierarchy type stores a mapping from entity IDs to aspects of a single type.
  */
-export class AspectMapHierarchyImpl
-  extends Map<Entity, Aspect>
-  implements AspectMapHierarchy
-{
+export class AspectMapHierarchyImpl extends Map<Entity, Aspect> implements AspectMapHierarchy {
   /** The catalog containing this hierarchy. */
   private readonly _catalog: Catalog;
 
@@ -665,11 +623,7 @@ export class AspectMapHierarchyImpl
    * @param aspectDef the aspect definition for aspects in this hierarchy
    * @param initialEntries initial entity-aspect mappings
    */
-  constructor(
-    catalog: Catalog,
-    aspectDef: AspectDef,
-    initialEntries: Iterable<readonly [Entity, Aspect]>
-  );
+  constructor(catalog: Catalog, aspectDef: AspectDef, initialEntries: Iterable<readonly [Entity, Aspect]>);
   /**
    * Creates a new AspectMapHierarchyImpl with initial entries and version.
    *
@@ -682,15 +636,15 @@ export class AspectMapHierarchyImpl
     catalog: Catalog,
     aspectDef: AspectDef,
     initialEntries: Iterable<readonly [Entity, Aspect]>,
-    version: number
+    version: number,
   );
   constructor(
     catalog: Catalog,
     aspectDef: AspectDef,
     versionOrEntries?: number | Iterable<readonly [Entity, Aspect]>,
-    version?: number
+    version?: number,
   ) {
-    if (versionOrEntries !== undefined && typeof versionOrEntries === 'object') {
+    if (versionOrEntries !== undefined && typeof versionOrEntries === "object") {
       // Iterable of entries provided
       super(versionOrEntries);
       this._catalog = catalog;
@@ -748,9 +702,7 @@ export class AspectMapHierarchyImpl
    */
   add(a: Aspect): Aspect | null {
     if (a.def().globalId() !== this._aspectDef.globalId()) {
-      throw new Error(
-        `Cannot add Aspect of type '${a.def().name()}' to hierarchy '${this._name}'.`
-      );
+      throw new Error(`Cannot add Aspect of type '${a.def().name()}' to hierarchy '${this._name}'.`);
     }
     return this.unsafeAdd(a);
   }
@@ -761,7 +713,7 @@ export class AspectMapHierarchyImpl
   unsafeAdd(a: Aspect): Aspect | null {
     const entity = a.entity();
     if (entity === null) {
-      throw new Error('Cannot add aspect with null entity to AspectMapHierarchy');
+      throw new Error("Cannot add aspect with null entity to AspectMapHierarchy");
     }
     const previous = this.get(entity);
     this.set(entity, a);

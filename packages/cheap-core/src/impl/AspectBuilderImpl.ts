@@ -2,15 +2,9 @@
  * AspectBuilder implementation classes
  */
 
-import {
-  Aspect,
-  AspectBuilder,
-  AspectDef,
-  Entity,
-  Property,
-} from '../interfaces/index.js';
-import { AspectPropertyMapImpl, AspectObjectMapImpl } from './AspectImpl.js';
-import { PropertyImpl } from './PropertyImpl.js';
+import { Aspect, AspectBuilder, AspectDef, Entity, Property } from "../interfaces/index.js";
+import { AspectPropertyMapImpl, AspectObjectMapImpl } from "./AspectImpl.js";
+import { PropertyImpl } from "./PropertyImpl.js";
 
 /**
  * Abstract base class providing common functionality for AspectBuilder implementations.
@@ -34,7 +28,7 @@ export abstract class AspectBuilderBase implements AspectBuilder {
    */
   entity(entity: Entity): AspectBuilder {
     if (!entity) {
-      throw new Error('Entity cannot be null');
+      throw new Error("Entity cannot be null");
     }
     this._entity = entity;
     return this;
@@ -45,7 +39,7 @@ export abstract class AspectBuilderBase implements AspectBuilder {
    */
   aspectDef(aspectDef: AspectDef): AspectBuilder {
     if (!aspectDef) {
-      throw new Error('AspectDef cannot be null');
+      throw new Error("AspectDef cannot be null");
     }
     this._aspectDef = aspectDef;
     return this;
@@ -56,18 +50,18 @@ export abstract class AspectBuilderBase implements AspectBuilder {
    * This overload accepts either a property name and value, or a Property object.
    */
   property(propertyNameOrProperty: string | Property, value?: unknown): AspectBuilder {
-    if (typeof propertyNameOrProperty === 'string') {
+    if (typeof propertyNameOrProperty === "string") {
       // Called with (propertyName, value)
       const propertyName = propertyNameOrProperty;
       if (!propertyName) {
-        throw new Error('Property name cannot be null');
+        throw new Error("Property name cannot be null");
       }
       this._properties.set(propertyName, value);
     } else {
       // Called with (property)
       const property = propertyNameOrProperty;
       if (!property) {
-        throw new Error('Property cannot be null');
+        throw new Error("Property cannot be null");
       }
       const propertyName = property.def().name();
       const propertyValue = property.read();
@@ -99,10 +93,10 @@ export abstract class AspectBuilderBase implements AspectBuilder {
    */
   protected validateBuildPrerequisites(): void {
     if (!this._entity) {
-      throw new Error('Entity must be set before building aspect');
+      throw new Error("Entity must be set before building aspect");
     }
     if (!this._aspectDef) {
-      throw new Error('AspectDef must be set before building aspect');
+      throw new Error("AspectDef must be set before building aspect");
     }
   }
 
@@ -111,7 +105,7 @@ export abstract class AspectBuilderBase implements AspectBuilder {
    */
   protected getEntity(): Entity {
     if (!this._entity) {
-      throw new Error('Entity has not been set');
+      throw new Error("Entity has not been set");
     }
     return this._entity;
   }
@@ -121,7 +115,7 @@ export abstract class AspectBuilderBase implements AspectBuilder {
    */
   protected getAspectDef(): AspectDef {
     if (!this._aspectDef) {
-      throw new Error('AspectDef has not been set');
+      throw new Error("AspectDef has not been set");
     }
     return this._aspectDef;
   }
@@ -139,7 +133,7 @@ export abstract class AspectBuilderBase implements AspectBuilder {
    */
   protected applyPropertiesToAspect(aspect: Aspect): void {
     if (!aspect) {
-      throw new Error('Aspect cannot be null');
+      throw new Error("Aspect cannot be null");
     }
     for (const [key, value] of this._properties.entries()) {
       aspect.write(key, value);
@@ -171,7 +165,7 @@ export class AspectPropertyMapBuilder implements AspectBuilder {
    */
   entity(entity: Entity): AspectBuilder {
     if (!entity) {
-      throw new Error('Entity cannot be null');
+      throw new Error("Entity cannot be null");
     }
     this._entity = entity;
     return this;
@@ -182,7 +176,7 @@ export class AspectPropertyMapBuilder implements AspectBuilder {
    */
   aspectDef(aspectDef: AspectDef): AspectBuilder {
     if (!aspectDef) {
-      throw new Error('AspectDef cannot be null');
+      throw new Error("AspectDef cannot be null");
     }
     this._aspectDef = aspectDef;
 
@@ -200,22 +194,20 @@ export class AspectPropertyMapBuilder implements AspectBuilder {
    * This overload accepts either a property name and value, or a Property object.
    */
   property(propertyNameOrProperty: string | Property, value?: unknown): AspectBuilder {
-    if (typeof propertyNameOrProperty === 'string') {
+    if (typeof propertyNameOrProperty === "string") {
       // Called with (propertyName, value)
       const propertyName = propertyNameOrProperty;
       if (!propertyName) {
-        throw new Error('Property name cannot be null');
+        throw new Error("Property name cannot be null");
       }
 
       if (!this._aspectDef) {
-        throw new Error('AspectDef must be set before adding properties by name and value.');
+        throw new Error("AspectDef must be set before adding properties by name and value.");
       }
 
       const propertyDef = this._aspectDef.propertyDef(propertyName);
       if (!propertyDef) {
-        throw new Error(
-          `Property '${propertyName}' is not defined in AspectDef '${this._aspectDef.name()}'`
-        );
+        throw new Error(`Property '${propertyName}' is not defined in AspectDef '${this._aspectDef.name()}'`);
       }
       const property = new PropertyImpl(propertyDef, value);
       this.validateProperty(property);
@@ -224,7 +216,7 @@ export class AspectPropertyMapBuilder implements AspectBuilder {
       // Called with (property)
       const property = propertyNameOrProperty;
       if (!property) {
-        throw new Error('Property cannot be null');
+        throw new Error("Property cannot be null");
       }
 
       if (this._aspectDef) {
@@ -241,7 +233,7 @@ export class AspectPropertyMapBuilder implements AspectBuilder {
    */
   private validateProperty(property: Property): void {
     if (!this._aspectDef) {
-      throw new Error('Cannot call validateProperty() before the AspectDef is set.');
+      throw new Error("Cannot call validateProperty() before the AspectDef is set.");
     }
     const propName = property.def().name();
     const expectedPropertyDef = this._aspectDef.propertyDef(propName);
@@ -249,15 +241,12 @@ export class AspectPropertyMapBuilder implements AspectBuilder {
     if (!expectedPropertyDef) {
       if (!this._aspectDef.canAddProperties()) {
         throw new Error(
-          `AspectDef '${this._aspectDef.name()}' does not define property '${propName}' and does not allow adding Properties.`
+          `AspectDef '${this._aspectDef.name()}' does not define property '${propName}' and does not allow adding Properties.`,
         );
       }
-    } else if (
-      expectedPropertyDef !== property.def() &&
-      !expectedPropertyDef.fullyEquals(property.def())
-    ) {
+    } else if (expectedPropertyDef !== property.def() && !expectedPropertyDef.fullyEquals(property.def())) {
       throw new Error(
-        `Property definition for '${propName}' does not match the definition in AspectDef '${this._aspectDef.name()}'`
+        `Property definition for '${propName}' does not match the definition in AspectDef '${this._aspectDef.name()}'`,
       );
     }
     // Validate value, throwing exceptions on failure
@@ -269,10 +258,10 @@ export class AspectPropertyMapBuilder implements AspectBuilder {
    */
   build(): Aspect {
     if (!this._entity) {
-      throw new Error('Entity must be set before building aspect');
+      throw new Error("Entity must be set before building aspect");
     }
     if (!this._aspectDef) {
-      throw new Error('AspectDef must be set before building aspect');
+      throw new Error("AspectDef must be set before building aspect");
     }
 
     const aspect = new AspectPropertyMapImpl(this._entity, this._aspectDef);

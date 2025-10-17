@@ -6,8 +6,8 @@
  * or file attributes in a filesystem context.
  */
 
-import { Property, PropertyDef } from './Property.js';
-import { Entity } from './Entity.js';
+import { Property, PropertyDef } from "./Property.js";
+import { Entity } from "./Entity.js";
 
 /**
  * Defines the structure and metadata for an aspect type within the Cheap data model.
