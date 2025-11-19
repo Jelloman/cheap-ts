@@ -24,6 +24,7 @@
   "dependencies": {
     "@cheap-ts/core": "^0.1.0",
     "@cheap-ts/json": "^0.1.0",
+    "@cheap-ts/db-sqlite": "^0.1.0",
     "express": "^5.0.1",
     "cors": "^2.8.5"
   },
