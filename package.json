@@ -13,11 +13,12 @@
     "test": "yarn workspaces foreach -A --exclude . run test",
     "lint": "eslint packages/*/src/**/*.ts",
     "format": "prettier --write \"packages/*/src/**/*.ts\"",
-    "clean": "yarn workspaces foreach -A --exclude . run clean"
+    "clean": "yarn workspaces foreach -A --exclude . run clean",
+    "fta": "fta packages"
   },
   "devDependencies": {
     "@eslint/js": "^9.37.0",
-    "@types/node": "^24.0.0",
+    "@types/node": "^24.8.1",
     "@typescript-eslint/eslint-plugin": "^8.0.0",
     "@typescript-eslint/parser": "^8.0.0",
     "eslint": "^9.37.0",
@@ -34,5 +35,8 @@
   "engines": {
     "node": ">=24.0.0"
   },
-  "packageManager": "yarn@4.10.3"
+  "packageManager": "yarn@4.10.3",
+  "dependencies": {
+    "fta-cli": "^3.0.0"
+  }
 }
