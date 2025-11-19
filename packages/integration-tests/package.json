@@ -1,0 +1,26 @@
+{
+  "name": "@cheap-ts/integration-tests",
+  "version": "0.1.0",
+  "description": "Integration tests for the CHEAP TypeScript project",
+  "type": "module",
+  "private": true,
+  "scripts": {
+    "test": "jest",
+    "test:sqlite": "CHEAP_DB_TYPE=sqlite jest",
+    "test:postgres": "CHEAP_DB_TYPE=postgres jest",
+    "test:mariadb": "CHEAP_DB_TYPE=mariadb jest",
+    "test:all-dbs": "npm run test:sqlite && npm run test:postgres && npm run test:mariadb"
+  },
+  "dependencies": {
+    "@cheap-ts/core": "file:../cheap-core",
+    "@cheap-ts/json": "file:../cheap-json",
+    "@cheap-ts/rest-client": "file:../cheap-rest-client"
+  },
+  "devDependencies": {
+    "@jest/globals": "^29.7.0",
+    "@types/node": "^22.0.0",
+    "jest": "^29.7.0",
+    "ts-jest": "^29.2.0",
+    "typescript": "^5.0.0"
+  }
+}
