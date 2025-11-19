@@ -183,11 +183,26 @@ The Cheap Java project is a data caching system implementing the CHEAP model (Ca
 - Validate request/response formats
 - Test error handling and validation
 - Mock HTTP requests for controller testing
+- **Hierarchy endpoint tests:**
+  - Test all hierarchy query endpoints (EntityList, EntitySet, EntityDirectory, EntityTree, AspectMap)
+  - Test all hierarchy mutation endpoints (add/remove entity IDs, directory entries, tree nodes)
+  - Validate request body schemas for mutations
+  - Test pagination parameters for list-based hierarchies
+  - Test error responses (404 for non-existent hierarchy, 400 for invalid requests)
+  - Mock HierarchyService to isolate controller logic
+  - Verify response format consistency across hierarchy types
 
 ### 5.5 REST Client Unit Tests
 - Test HTTP client with mocked server responses
 - Verify error handling and retry logic
 - Test request transformation and response parsing
+- **Hierarchy client method tests:**
+  - Mock all hierarchy query methods (getEntityList, getEntityDirectory, getEntityTree, getAspectMap)
+  - Mock all hierarchy mutation methods (addEntityIds, removeEntityIds, addDirectoryEntries, etc.)
+  - Test request body construction for mutations
+  - Test response parsing for different hierarchy types
+  - Verify query parameter construction for pagination
+  - Test error handling for hierarchy-specific errors (invalid paths, duplicate entries)
 
 ---
 
@@ -246,10 +261,44 @@ The Cheap Java project is a data caching system implementing the CHEAP model (Ca
 - `POST /catalogs/{catalogId}/aspects` - Upsert aspect (auto-create entity)
 - `GET /catalogs/{catalogId}/aspects` - Query aspects with filters
 
-**Hierarchy Operations:**
-- `GET /catalogs/{catalogId}/hierarchies/{type}/{name}` - Retrieve hierarchy contents
+**Hierarchy Query Operations:**
+- `GET /catalogs/{catalogId}/hierarchies/{name}` - Retrieve hierarchy contents with pagination
   - Support all 5 hierarchy types: EntityList, EntitySet, EntityDirectory, EntityTree, AspectMap
-- Mutation operations for adding/removing entities, directory entries, tree nodes
+  - Response format varies by hierarchy type
+  - Includes pagination support for large hierarchies
+
+**Hierarchy Creation:**
+- Hierarchies are created as part of catalog definition (via `hierarchyDefs` in catalog creation)
+- Each hierarchy has a name and type (ENTITY_LIST, ENTITY_SET, ENTITY_DIR, ENTITY_TREE, ASPECT_MAP)
+
+**Hierarchy Mutation Operations:**
+
+*Entity List/Set Mutations:*
+- `POST /catalogs/{catalogId}/hierarchies/{name}/entity-ids` - Add entity IDs to list/set
+  - Request: `{ "entityIds": ["uuid1", "uuid2", ...] }`
+  - Response: Operation status and affected count
+- `DELETE /catalogs/{catalogId}/hierarchies/{name}/entity-ids` - Remove entity IDs from list/set
+  - Request: `{ "entityIds": ["uuid1", "uuid2", ...] }`
+  - Response: Operation status and removal count
+
+*Entity Directory Mutations:*
+- `POST /catalogs/{catalogId}/hierarchies/{name}/directory-entries` - Add directory entries
+  - Request: `{ "entries": [{"name": "key1", "entityId": "uuid1"}, ...] }`
+  - Response: Operation status and added entry count
+- `DELETE /catalogs/{catalogId}/hierarchies/{name}/directory-entries/by-names` - Remove by entry names
+  - Request: `{ "names": ["key1", "key2", ...] }`
+  - Response: Operation status and removal count
+- `DELETE /catalogs/{catalogId}/hierarchies/{name}/directory-entries/by-entity-ids` - Remove by entity IDs
+  - Request: `{ "entityIds": ["uuid1", "uuid2", ...] }`
+  - Response: Operation status and removal count
+
+*Entity Tree Mutations:*
+- `POST /catalogs/{catalogId}/hierarchies/{name}/tree-nodes` - Add nodes to tree
+  - Request: `{ "parentPath": "/path/to/parent", "nodes": [{...}, ...] }`
+  - Response: Operation status and tree structure updates
+- `DELETE /catalogs/{catalogId}/hierarchies/{name}/tree-nodes` - Remove tree nodes by path
+  - Request: `{ "paths": ["/path/to/node1", "/path/to/node2", ...] }`
+  - Response: Operation status and removal count
 
 ### 7.3 Database Integration
 **Multi-database support via configuration:**
@@ -322,9 +371,24 @@ interface CheapRestClient {
   upsertAspect(catalogId: string, aspect: Aspect): Promise<UpsertResponse>
   queryAspects(catalogId: string, query: AspectQuery): Promise<AspectQueryResponse>
 
-  // Hierarchy operations
-  getHierarchy<T>(catalogId: string, type: HierarchyType, name: string): Promise<Hierarchy<T>>
-  addToHierarchy(catalogId: string, hierarchyName: string, mutation: HierarchyMutation): Promise<void>
+  // Hierarchy query operations
+  getEntityList(catalogId: string, name: string, page?: number, size?: number): Promise<EntityListResponse>
+  getEntityDirectory(catalogId: string, name: string): Promise<EntityDirectoryResponse>
+  getEntityTree(catalogId: string, name: string): Promise<EntityTreeResponse>
+  getAspectMap(catalogId: string, name: string, page?: number, size?: number): Promise<AspectMapResponse>
+
+  // Hierarchy mutation - Entity List/Set operations
+  addEntityIds(catalogId: string, hierarchyName: string, entityIds: string[]): Promise<EntityIdsOperationResponse>
+  removeEntityIds(catalogId: string, hierarchyName: string, entityIds: string[]): Promise<EntityIdsOperationResponse>
+
+  // Hierarchy mutation - Entity Directory operations
+  addDirectoryEntries(catalogId: string, name: string, entries: DirectoryEntry[]): Promise<DirectoryOperationResponse>
+  removeDirectoryEntriesByNames(catalogId: string, name: string, names: string[]): Promise<DirectoryOperationResponse>
+  removeDirectoryEntriesByEntityIds(catalogId: string, name: string, entityIds: string[]): Promise<DirectoryOperationResponse>
+
+  // Hierarchy mutation - Entity Tree operations
+  addTreeNodes(catalogId: string, name: string, parentPath: string, nodes: TreeNode[]): Promise<TreeOperationResponse>
+  removeTreeNodes(catalogId: string, name: string, paths: string[]): Promise<TreeOperationResponse>
 }
 ```
 
@@ -342,10 +406,25 @@ interface CheapRestClient {
 
 ### 8.4 Response DTOs
 **Port Java response classes:**
+
+**Catalog & Aspect responses:**
 - `CreateCatalogResponse` - UUID of created catalog
-- `AspectQueryResponse` - Paginated aspect results
-- `TreeOperationResponse` - Hierarchy mutation results
-- `UpsertResponse` - Entity creation/update status
+- `CatalogListResponse` - Paginated list of catalogs
+- `CreateAspectDefResponse` - UUID of created aspect definition
+- `AspectDefListResponse` - Paginated list of aspect definitions
+- `UpsertAspectsResponse` - Entity creation/update status with affected entity IDs
+- `AspectQueryResponse` - Paginated aspect query results
+
+**Hierarchy query responses:**
+- `EntityListResponse` - Paginated list of entity IDs
+- `EntityDirectoryResponse` - Map of names to entity IDs
+- `EntityTreeResponse` - Tree structure with nodes and hierarchy
+- `AspectMapResponse` - Map of entity IDs to aspects with pagination
+
+**Hierarchy mutation responses:**
+- `EntityIdsOperationResponse` - Result of adding/removing entity IDs (affected count, status)
+- `DirectoryOperationResponse` - Result of directory mutations (affected entries, status)
+- `TreeOperationResponse` - Result of tree mutations (affected nodes, updated structure)
 
 ### 8.5 Client Configuration
 **Support flexible configuration:**
@@ -392,29 +471,75 @@ integration-tests/
 - Parameterized tests running against PostgreSQL, SQLite, MariaDB
 - Verify identical behavior across all database backends
 - Test coverage:
-  - Catalog structure operations
-  - AspectDef CRUD operations
-  - Aspect upserts and queries
-  - Pagination and sorting
-  - All 5 hierarchy types
+  - **Catalog operations:** Create, list, retrieve definitions
+  - **AspectDef operations:** Create, list, get by UUID/name
+  - **Aspect operations:** Upsert, query with filters, pagination
+  - **Hierarchy creation:** Create all 5 hierarchy types via catalog definition
+  - **Hierarchy query operations:**
+    - EntityList retrieval with pagination
+    - EntitySet retrieval
+    - EntityDirectory retrieval (name-to-UUID mapping)
+    - EntityTree retrieval (full tree structure)
+    - AspectMap retrieval with pagination
+  - **Hierarchy mutation operations:**
+    - EntityList/Set: Add entity IDs, remove entity IDs
+    - EntityDirectory: Add entries, remove by names, remove by entity IDs
+    - EntityTree: Add nodes at specific paths, remove nodes by path
+  - **Edge cases:**
+    - Empty hierarchies
+    - Large hierarchies (1000+ entities)
+    - Duplicate entity IDs in lists/sets
+    - Invalid tree paths
+    - Non-existent directory keys
 
 **Phase 2: Complex Scenarios**
 - **Full workflow tests:**
-  - Create catalog → Define aspects → Build hierarchies → Bulk upsert → Query
-  - Real-world usage simulation
+  - Create catalog with multiple hierarchy definitions
+  - Define aspect types
+  - Create entities via aspect upserts
+  - Populate hierarchies with entity IDs
+  - Add directory entries mapping names to entities
+  - Build tree structures with parent-child relationships
+  - Query hierarchies and verify structure
+  - Modify hierarchies (add/remove operations)
+  - Re-query and verify changes persisted
+- **Hierarchy-specific workflows:**
+  - Build EntityList, add 100 entities, paginate through results
+  - Build EntityDirectory, map 50 names to entities, query by name
+  - Build EntityTree with 3 levels of nesting, query subtrees
+  - Combine multiple hierarchy types in single catalog
 - **Concurrency tests:**
-  - Multiple concurrent operations using Promise.all()
+  - Concurrent aspect upserts across multiple threads
+  - Concurrent hierarchy mutations (add/remove entity IDs simultaneously)
   - Verify data consistency under concurrent load
   - Test with 10+ parallel operations
+  - Ensure no lost updates or race conditions in hierarchy mutations
 
 **Phase 3: Performance Baselines**
 - Establish metrics for key operations:
-  - Bulk upsert performance (1000+ entities)
-  - Query performance with filters
-  - Hierarchy retrieval performance
-  - Pagination performance
-- Compare across database backends
+  - **Aspect operations:**
+    - Bulk upsert performance (1000+ entities)
+    - Query performance with filters
+    - Query pagination performance
+  - **Hierarchy query operations:**
+    - EntityList retrieval (1000+ entities, paginated)
+    - EntityDirectory retrieval (large key-value maps)
+    - EntityTree retrieval (deep trees, 5+ levels)
+    - AspectMap retrieval with pagination
+  - **Hierarchy mutation operations:**
+    - Bulk add entity IDs (100+ at once)
+    - Bulk remove entity IDs (100+ at once)
+    - Add directory entries (100+ entries)
+    - Remove directory entries by names/IDs
+    - Add tree nodes in batches
+    - Remove tree nodes by path
+  - **Combined operations:**
+    - Sequential mutations followed by queries
+    - Interleaved reads and writes
+- Compare across database backends (PostgreSQL, SQLite, MariaDB)
+- Identify performance characteristics of each database
 - Regression testing for performance
+- Establish acceptable latency thresholds for production
 
 **Phase 4: Docker-Based Testing**
 - Use **Testcontainers** (Node.js version) for database containers
