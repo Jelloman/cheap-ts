@@ -3,9 +3,9 @@
  */
 
 import { Router, Request, Response } from "express";
-import { catalogStore } from "../services/CatalogService.js";
-import { AspectMapHierarchyImpl } from "@cheap-ts/core";
-import { serializeAspectDef, deserializeAspectDef, type AspectDefJson } from "@cheap-ts/json";
+import { getDatabase } from "../services/DatabaseService.js";
+import type { AspectDefJson } from "@cheap-ts/json";
+import { randomUUID } from "crypto";
 
 export const aspectDefRouter = Router({ mergeParams: true });
 
@@ -14,7 +14,10 @@ export const aspectDefRouter = Router({ mergeParams: true });
  */
 aspectDefRouter.post("/", (req: Request, res: Response) => {
   try {
-    const catalog = catalogStore.get(req.params.catalogId);
+    const db = getDatabase();
+
+    // Verify catalog exists
+    const catalog = db.getCatalog(req.params.catalogId);
     if (!catalog) {
       res.status(404).json({ error: "Catalog not found" });
       return;
@@ -28,26 +31,38 @@ aspectDefRouter.post("/", (req: Request, res: Response) => {
       return;
     }
 
-    // Deserialize the AspectDef from JSON
-    const aspectDef = deserializeAspectDef(aspectDefJson);
-
-    // Create an AspectMapHierarchy for this AspectDef in the catalog
-    // This is done by the catalog's addAspectDef method (if we had one)
-    // For now, we'll store it directly
-    const aspectMap = catalog.aspects(aspectDef.name());
-    if (aspectMap) {
-      res.status(409).json({ error: `AspectDef with name '${aspectDef.name()}' already exists` });
+    // Check if AspectDef with this name already exists
+    const existing = db.getAspectDefByName(req.params.catalogId, aspectDefJson.name);
+    if (existing) {
+      res.status(409).json({ error: `AspectDef with name '${aspectDefJson.name}' already exists` });
       return;
     }
 
-    // Add the aspect def to the catalog by creating an AspectMapHierarchy
-    // The catalog will automatically register the AspectDef
-    const hierarchy = new AspectMapHierarchyImpl(catalog, aspectDef);
-    catalog.addHierarchy(hierarchy);
+    // Convert properties from Record to Array
+    const propertyDefs = Object.entries(aspectDefJson.properties).map(([propName, propDef]) => ({
+      name: propName,
+      typeCode: propDef.type,
+      defaultValue: propDef.defaultValue,
+      hasDefaultValue: propDef.hasDefaultValue,
+      readable: propDef.readable,
+      writable: propDef.writable,
+      nullable: propDef.nullable,
+      removable: propDef.removable,
+      multivalued: propDef.multivalued,
+    }));
+
+    // Create the AspectDef in the database
+    const globalId = aspectDefJson.globalId || randomUUID();
+    db.createAspectDef(
+      req.params.catalogId,
+      globalId,
+      aspectDefJson.name,
+      propertyDefs
+    );
 
     res.status(201).json({
-      id: aspectDef.globalId(),
-      name: aspectDef.name(),
+      id: globalId,
+      name: aspectDefJson.name,
       created: new Date().toISOString(),
     });
   } catch (error) {
@@ -62,7 +77,10 @@ aspectDefRouter.post("/", (req: Request, res: Response) => {
  */
 aspectDefRouter.get("/", (req: Request, res: Response) => {
   try {
-    const catalog = catalogStore.get(req.params.catalogId);
+    const db = getDatabase();
+
+    // Verify catalog exists
+    const catalog = db.getCatalog(req.params.catalogId);
     if (!catalog) {
       res.status(404).json({ error: "Catalog not found" });
       return;
@@ -71,14 +89,15 @@ aspectDefRouter.get("/", (req: Request, res: Response) => {
     const page = parseInt(req.query.page as string) || 0;
     const size = parseInt(req.query.size as string) || 20;
 
-    const allAspectDefs = Array.from(catalog.aspectDefs());
+    const offset = page * size;
+    const aspectDefs = db.listAspectDefs(req.params.catalogId, size, offset);
+
+    // Get total count (simplified - in production would use a COUNT query)
+    const allAspectDefs = db.listAspectDefs(req.params.catalogId, 10000, 0);
     const total = allAspectDefs.length;
-    const start = page * size;
-    const end = start + size;
-    const pagedAspectDefs = allAspectDefs.slice(start, end);
 
     res.json({
-      aspectDefs: pagedAspectDefs.map((def) => serializeAspectDef(def)),
+      aspectDefs,
       page,
       size,
       total,
@@ -96,22 +115,23 @@ aspectDefRouter.get("/", (req: Request, res: Response) => {
  */
 aspectDefRouter.get("/:aspectDefId", (req: Request, res: Response) => {
   try {
-    const catalog = catalogStore.get(req.params.catalogId);
+    const db = getDatabase();
+
+    // Verify catalog exists
+    const catalog = db.getCatalog(req.params.catalogId);
     if (!catalog) {
       res.status(404).json({ error: "Catalog not found" });
       return;
     }
 
-    const aspectDef = Array.from(catalog.aspectDefs()).find(
-      (def) => def.globalId() === req.params.aspectDefId
-    );
+    const aspectDef = db.getAspectDef(req.params.catalogId, req.params.aspectDefId);
 
     if (!aspectDef) {
       res.status(404).json({ error: "AspectDef not found" });
       return;
     }
 
-    res.json(serializeAspectDef(aspectDef));
+    res.json(aspectDef);
   } catch (error) {
     res.status(500).json({
       error: error instanceof Error ? error.message : "Failed to get AspectDef",
@@ -124,22 +144,23 @@ aspectDefRouter.get("/:aspectDefId", (req: Request, res: Response) => {
  */
 aspectDefRouter.get("/by-name/:name", (req: Request, res: Response) => {
   try {
-    const catalog = catalogStore.get(req.params.catalogId);
+    const db = getDatabase();
+
+    // Verify catalog exists
+    const catalog = db.getCatalog(req.params.catalogId);
     if (!catalog) {
       res.status(404).json({ error: "Catalog not found" });
       return;
     }
 
-    const aspectDef = Array.from(catalog.aspectDefs()).find(
-      (def) => def.name() === req.params.name
-    );
+    const aspectDef = db.getAspectDefByName(req.params.catalogId, req.params.name);
 
     if (!aspectDef) {
       res.status(404).json({ error: "AspectDef not found" });
       return;
     }
 
-    res.json(serializeAspectDef(aspectDef));
+    res.json(aspectDef);
   } catch (error) {
     res.status(500).json({
       error: error instanceof Error ? error.message : "Failed to get AspectDef",

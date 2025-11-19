@@ -3,9 +3,8 @@
  */
 
 import { Router, Request, Response } from "express";
-import { catalogStore } from "../services/CatalogService.js";
-import { EntityImpl, AspectPropertyMapImpl } from "@cheap-ts/core";
-import { serializeAspect, type AspectJson } from "@cheap-ts/json";
+import { getDatabase } from "../services/DatabaseService.js";
+import type { AspectJson } from "@cheap-ts/json";
 
 export const aspectRouter = Router({ mergeParams: true });
 
@@ -14,7 +13,10 @@ export const aspectRouter = Router({ mergeParams: true });
  */
 aspectRouter.post("/", (req: Request, res: Response) => {
   try {
-    const catalog = catalogStore.get(req.params.catalogId);
+    const db = getDatabase();
+
+    // Verify catalog exists
+    const catalog = db.getCatalog(req.params.catalogId);
     if (!catalog) {
       res.status(404).json({ error: "Catalog not found" });
       return;
@@ -27,17 +29,10 @@ aspectRouter.post("/", (req: Request, res: Response) => {
       return;
     }
 
-    // Find the AspectDef
-    const aspectDef = Array.from(catalog.aspectDefs()).find((def) => def.name() === aspectDefName);
+    // Find the AspectDef by name
+    const aspectDef = db.getAspectDefByName(req.params.catalogId, aspectDefName);
     if (!aspectDef) {
       res.status(404).json({ error: `AspectDef '${aspectDefName}' not found` });
-      return;
-    }
-
-    // Get the AspectMapHierarchy for this AspectDef
-    const aspectMap = catalog.aspects(aspectDef);
-    if (!aspectMap) {
-      res.status(500).json({ error: `No AspectMap found for AspectDef '${aspectDefName}'` });
       return;
     }
 
@@ -45,33 +40,16 @@ aspectRouter.post("/", (req: Request, res: Response) => {
 
     // Process each aspect
     for (const aspectJson of aspects) {
-      // Get or create entity
-      let entity = new EntityImpl(aspectJson.entityId);
-      let created = false;
-
-      // Check if entity already exists in this catalog
-      const existingAspect = aspectMap.get(entity);
-      if (!existingAspect) {
-        created = true;
-      }
-
-      // Create the aspect with the entity
-      const aspect = new AspectPropertyMapImpl(entity, aspectDef);
-
-      // Set property values
-      for (const propName in aspectJson.properties) {
-        const propDef = aspectDef.propertyDef(propName);
-        if (propDef) {
-          aspect.unsafeWrite(propName, aspectJson.properties[propName]);
-        }
-      }
-
-      // Add/update aspect in the catalog
-      aspectMap.add(aspect);
+      const result = db.upsertAspect(
+        req.params.catalogId,
+        aspectJson.entityId,
+        aspectDef.globalId,
+        aspectJson.properties
+      );
 
       results.push({
-        entityId: entity.globalId(),
-        created,
+        entityId: aspectJson.entityId,
+        created: result.created,
       });
     }
 
@@ -92,7 +70,10 @@ aspectRouter.post("/", (req: Request, res: Response) => {
  */
 aspectRouter.get("/", (req: Request, res: Response) => {
   try {
-    const catalog = catalogStore.get(req.params.catalogId);
+    const db = getDatabase();
+
+    // Verify catalog exists
+    const catalog = db.getCatalog(req.params.catalogId);
     if (!catalog) {
       res.status(404).json({ error: "Catalog not found" });
       return;
@@ -106,34 +87,20 @@ aspectRouter.get("/", (req: Request, res: Response) => {
       return;
     }
 
-    // Find the AspectDef
-    const aspectDef = Array.from(catalog.aspectDefs()).find((def) => def.name() === aspectDefName);
+    // Find the AspectDef by name
+    const aspectDef = db.getAspectDefByName(req.params.catalogId, aspectDefName);
     if (!aspectDef) {
       res.status(404).json({ error: `AspectDef '${aspectDefName}' not found` });
       return;
     }
 
-    // Get the AspectMapHierarchy
-    const aspectMap = catalog.aspects(aspectDef);
-    if (!aspectMap) {
-      res.status(404).json({ error: `No aspects found for AspectDef '${aspectDefName}'` });
-      return;
-    }
-
-    // Get all aspects or filter by entity IDs
-    // AspectMapHierarchy is a Map<Entity, Aspect>, so we can use Map.values()
-    let aspects = Array.from(aspectMap.values());
-
-    if (entityIds) {
-      const entityIdArray = Array.isArray(entityIds) ? entityIds : [entityIds];
-      aspects = aspects.filter((aspect) =>
-        entityIdArray.includes(aspect.entity().globalId())
-      );
-    }
+    // Query aspects from database
+    const entityIdArray = entityIds ? (Array.isArray(entityIds) ? entityIds : [entityIds]) : undefined;
+    const aspects = db.queryAspects(req.params.catalogId, aspectDef.globalId, entityIdArray);
 
     res.json({
       aspectDefName,
-      aspects: aspects.map((aspect) => serializeAspect(aspect)),
+      aspects,
       total: aspects.length,
     });
   } catch (error) {

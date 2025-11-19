@@ -3,7 +3,7 @@
  */
 
 import { Router, Request, Response } from "express";
-import { catalogStore } from "../services/CatalogService.js";
+import { getDatabase } from "../services/DatabaseService.js";
 
 export const catalogRouter = Router();
 
@@ -12,10 +12,11 @@ export const catalogRouter = Router();
  */
 catalogRouter.post("/", (_req: Request, res: Response) => {
   try {
-    const catalog = catalogStore.create();
+    const db = getDatabase();
+    const catalogId = db.createCatalog("SINK");
     res.status(201).json({
-      id: catalog.globalId(),
-      species: catalog.species(),
+      id: catalogId,
+      species: "SINK",
       created: new Date().toISOString(),
     });
   } catch (error) {
@@ -30,11 +31,12 @@ catalogRouter.post("/", (_req: Request, res: Response) => {
  */
 catalogRouter.get("/", (_req: Request, res: Response) => {
   try {
-    const catalogs = catalogStore.list();
+    const db = getDatabase();
+    const catalogs = db.listCatalogs();
     res.json({
       catalogs: catalogs.map((cat) => ({
-        id: cat.globalId(),
-        species: cat.species(),
+        id: cat.id,
+        species: cat.species,
       })),
       total: catalogs.length,
     });
@@ -50,17 +52,18 @@ catalogRouter.get("/", (_req: Request, res: Response) => {
  */
 catalogRouter.get("/:id", (req: Request, res: Response) => {
   try {
-    const catalog = catalogStore.get(req.params.id);
+    const db = getDatabase();
+    const catalog = db.getCatalog(req.params.id);
     if (!catalog) {
       res.status(404).json({ error: "Catalog not found" });
       return;
     }
 
     res.json({
-      id: catalog.globalId(),
-      species: catalog.species(),
-      uri: catalog.uri()?.toString() ?? null,
-      upstream: catalog.upstream(),
+      id: catalog.id,
+      species: catalog.species,
+      uri: catalog.uri ?? null,
+      upstream: catalog.upstream,
     });
   } catch (error) {
     res.status(500).json({
@@ -74,12 +77,8 @@ catalogRouter.get("/:id", (req: Request, res: Response) => {
  */
 catalogRouter.delete("/:id", (req: Request, res: Response) => {
   try {
-    const deleted = catalogStore.delete(req.params.id);
-    if (!deleted) {
-      res.status(404).json({ error: "Catalog not found" });
-      return;
-    }
-
+    const db = getDatabase();
+    db.deleteCatalog(req.params.id);
     res.status(204).send();
   } catch (error) {
     res.status(500).json({
