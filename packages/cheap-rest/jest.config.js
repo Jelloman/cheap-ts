@@ -4,6 +4,9 @@ export default {
   extensionsToTreatAsEsm: ['.ts'],
   moduleNameMapper: {
     '^(\\.{1,2}/.*)\\.js$': '$1',
+    '^@cheap-ts/core$': '<rootDir>/../cheap-core/src/index.ts',
+    '^@cheap-ts/json$': '<rootDir>/../cheap-json/src/index.ts',
+    '^@cheap-ts/db-sqlite$': '<rootDir>/../cheap-db-sqlite/src/index.ts',
   },
   transform: {
     '^.+\\.tsx?$': [

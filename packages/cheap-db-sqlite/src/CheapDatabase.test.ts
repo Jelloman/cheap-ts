@@ -251,13 +251,13 @@ describe("CheapDatabase", () => {
     });
 
     it("should create an entity set hierarchy", () => {
-      const hierarchyId = db.createHierarchy(catalogId, "mySet", "ENTITY_SET");
+      db.createHierarchy(catalogId, "mySet", "ENTITY_SET");
       const hierarchy = db.getHierarchy(catalogId, "mySet");
       expect(hierarchy.type).toBe("ENTITY_SET");
     });
 
     it("should create an entity directory hierarchy", () => {
-      const hierarchyId = db.createHierarchy(catalogId, "myDir", "ENTITY_DIR");
+      db.createHierarchy(catalogId, "myDir", "ENTITY_DIR");
       const hierarchy = db.getHierarchy(catalogId, "myDir");
       expect(hierarchy.type).toBe("ENTITY_DIR");
     });

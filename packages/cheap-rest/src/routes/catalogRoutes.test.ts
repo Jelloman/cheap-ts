@@ -6,52 +6,30 @@ import { describe, it, expect, beforeEach, afterEach } from "@jest/globals";
 import request from "supertest";
 import express from "express";
 import { catalogRouter } from "./catalogRoutes.js";
+import { CheapDatabase } from "@cheap-ts/db-sqlite";
 
-// Mock the DatabaseService
-jest.mock("../services/DatabaseService.js", () => {
-  const mockCatalogs: Record<string, any> = {};
-  let mockDb: any;
+// Mock the DatabaseService to use an in-memory database
+let testDb: CheapDatabase;
 
-  return {
-    getDatabase: () => {
-      if (!mockDb) {
-        mockDb = {
-          createCatalog: jest.fn((species: string) => {
-            const id = "test-catalog-id";
-            mockCatalogs[id] = {id, species, upstream: null };
-            return id;
-          }),
-          getCatalog: jest.fn((id: string) => mockCatalogs[id]),
-          listCatalogs: jest.fn(() => Object.values(mockCatalogs)),
-          deleteCatalog: jest.fn((id: string) => {
-            if (mockCatalogs[id]) {
-              delete mockCatalogs[id];
-              return true;
-            }
-            return false;
-          }),
-        };
-      }
-      return mockDb;
-    },
-    // Reset function for tests
-    __resetMockCatalogs: () => {
-      Object.keys(mockCatalogs).forEach(key => delete mockCatalogs[key]);
-    },
-  };
-});
+jest.mock("../services/DatabaseService.js", () => ({
+  getDatabase: () => testDb,
+}));
 
 describe("Catalog Routes", () => {
   let app: express.Application;
 
   beforeEach(() => {
+    // Create a fresh in-memory database for each test
+    testDb = new CheapDatabase(":memory:");
+
     app = express();
     app.use(express.json());
     app.use("/api/catalogs", catalogRouter);
+  });
 
-    // Reset mock data
-    const { __resetMockCatalogs } = require("../services/DatabaseService.js");
-    __resetMockCatalogs();
+  afterEach(() => {
+    // Close the database after each test
+    testDb.close();
   });
 
   describe("POST /api/catalogs", () => {

@@ -2,60 +2,36 @@
  * Unit tests for AspectDef REST API routes
  */
 
-import { describe, it, expect, beforeEach } from "@jest/globals";
+import { describe, it, expect, beforeEach, afterEach } from "@jest/globals";
 import request from "supertest";
 import express from "express";
 import { aspectDefRouter } from "./aspectDefRoutes.js";
-import { randomUUID } from "crypto";
+import { CheapDatabase } from "@cheap-ts/db-sqlite";
 
-// Mock the DatabaseService
-jest.mock("../services/DatabaseService.js", () => {
-  const mockCatalogs: Record<string, any> = { "test-catalog": { id: "test-catalog" } };
-  const mockAspectDefs: Record<string, any> = {};
-  let mockDb: any;
+// Mock the DatabaseService to use an in-memory database
+let testDb: CheapDatabase;
 
-  return {
-    getDatabase: () => {
-      if (!mockDb) {
-        mockDb = {
-          getCatalog: jest.fn((id: string) => mockCatalogs[id]),
-          getAspectDefByName: jest.fn((catalogId: string, name: string) => {
-            return Object.values(mockAspectDefs).find((def: any) => def.name === name);
-          }),
-          createAspectDef: jest.fn((catalogId: string, aspectDefId: string, name: string, propertyDefs: any[]) => {
-            mockAspectDefs[aspectDefId] = {
-              id: aspectDefId,
-              name,
-              globalId: aspectDefId,
-              propertyDefs,
-            };
-          }),
-          getAspectDef: jest.fn((catalogId: string, aspectDefId: string) => mockAspectDefs[aspectDefId]),
-          listAspectDefs: jest.fn((catalogId: string, limit: number, offset: number) => {
-            const defs = Object.values(mockAspectDefs);
-            return defs.slice(offset, offset + limit);
-          }),
-        };
-      }
-      return mockDb;
-    },
-    __resetMockData: () => {
-      Object.keys(mockAspectDefs).forEach(key => delete mockAspectDefs[key]);
-    },
-  };
-});
+jest.mock("../services/DatabaseService.js", () => ({
+  getDatabase: () => testDb,
+}));
 
 describe("AspectDef Routes", () => {
   let app: express.Application;
-  const catalogId = "test-catalog";
+  let catalogId: string;
 
   beforeEach(() => {
+    // Create a fresh in-memory database for each test
+    testDb = new CheapDatabase(":memory:");
+    catalogId = testDb.createCatalog("SINK");
+
     app = express();
     app.use(express.json());
     app.use("/api/catalogs/:catalogId/aspect-defs", aspectDefRouter);
+  });
 
-    const { __resetMockData } = require("../services/DatabaseService.js");
-    __resetMockData();
+  afterEach(() => {
+    // Close the database after each test
+    testDb.close();
   });
 
   describe("POST /api/catalogs/:catalogId/aspect-defs", () => {
