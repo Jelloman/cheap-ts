@@ -1,0 +1,40 @@
+{
+  "name": "@cheap-ts/rest",
+  "version": "0.1.0",
+  "description": "REST API service for CHEAP model",
+  "type": "module",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "bin": {
+    "cheap-rest": "./dist/server.js"
+  },
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    }
+  },
+  "scripts": {
+    "build": "tsc -b",
+    "clean": "rm -rf dist tsconfig.tsbuildinfo",
+    "start": "node dist/server.js",
+    "dev": "tsc -b && node --watch dist/server.js",
+    "test": "jest"
+  },
+  "dependencies": {
+    "@cheap-ts/core": "^0.1.0",
+    "@cheap-ts/json": "^0.1.0",
+    "express": "^5.0.1",
+    "cors": "^2.8.5"
+  },
+  "devDependencies": {
+    "@jest/globals": "^30.0.0",
+    "@types/express": "^5.0.0",
+    "@types/cors": "^2.8.17",
+    "@types/jest": "^30.0.0",
+    "@types/node": "^24.0.0",
+    "jest": "^30.0.0",
+    "ts-jest": "^29.4.5",
+    "typescript": "^5.9.0"
+  }
+}
