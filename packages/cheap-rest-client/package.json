@@ -1,0 +1,32 @@
+{
+  "name": "@cheap-ts/rest-client",
+  "version": "0.1.0",
+  "description": "REST API client library for CHEAP model",
+  "type": "module",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    }
+  },
+  "scripts": {
+    "build": "tsc -b",
+    "clean": "rm -rf dist tsconfig.tsbuildinfo",
+    "test": "jest"
+  },
+  "dependencies": {
+    "@cheap-ts/core": "^0.1.0",
+    "@cheap-ts/json": "^0.1.0",
+    "axios": "^1.7.0"
+  },
+  "devDependencies": {
+    "@jest/globals": "^30.0.0",
+    "@types/jest": "^30.0.0",
+    "@types/node": "^24.0.0",
+    "jest": "^30.0.0",
+    "ts-jest": "^29.4.5",
+    "typescript": "^5.9.0"
+  }
+}
