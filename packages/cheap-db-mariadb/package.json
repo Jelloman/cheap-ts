@@ -18,7 +18,7 @@
   },
   "dependencies": {
     "@cheap-ts/core": "^0.1.0",
-    "mariadb": "^3.4.0"
+    "mariadb": "^3.4.5"
   },
   "devDependencies": {
     "@jest/globals": "^30.0.0",
