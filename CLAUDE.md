@@ -105,6 +105,7 @@ Each package follows this structure:
 - **Strict mode**: Enabled with all strict checks
 - **Decorators**: Enabled (`experimentalDecorators`, `emitDecoratorMetadata`) for future reflection-based implementations
 - **Project references**: Each package references its dependencies via `tsconfig.json`
+- **Internal dependencies**: Use explicit module namesfor internal dependencies; do NOT use `file:...` references because they result in unstable hash versions and break builds.
 
 ## Development Guidelines
 
