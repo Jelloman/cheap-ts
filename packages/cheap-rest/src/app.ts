@@ -5,6 +5,9 @@
 import express, { Express, Request, Response, NextFunction } from "express";
 import cors from "cors";
 import { catalogRouter } from "./routes/catalogRoutes.js";
+import { aspectDefRouter } from "./routes/aspectDefRoutes.js";
+import { aspectRouter } from "./routes/aspectRoutes.js";
+import { hierarchyRouter } from "./routes/hierarchyRoutes.js";
 
 export function createApp(): Express {
   const app = express();
@@ -15,6 +18,9 @@ export function createApp(): Express {
 
   // Routes
   app.use("/api/catalogs", catalogRouter);
+  app.use("/api/catalogs/:catalogId/aspect-defs", aspectDefRouter);
+  app.use("/api/catalogs/:catalogId/aspects", aspectRouter);
+  app.use("/api/catalogs/:catalogId/hierarchies", hierarchyRouter);
 
   // Health check
   app.get("/health", (_req: Request, res: Response) => {
